@@ -10,7 +10,7 @@
     "lint": "tslint --project .",
     "build": "npm run clean && tsc",
     "test": "jest",
-    "release": "npm-run-all -s test lint clean build"
+    "release": "npm-run-all -s test clean build lint"
   },
   "dependencies": {
     "jest": "^18.0.0",
