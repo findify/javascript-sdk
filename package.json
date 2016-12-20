@@ -13,7 +13,7 @@
   },
   "scripts": {
     "clean": "rimraf lib",
-    "lint": "tslint",
+    "lint": "tslint --project .",
     "build": "npm run clean && tsc",
     "test": "",
     "deploy": "npm-run-all -s test lint clean build"
