@@ -29,9 +29,6 @@
       "ts",
       "tsx",
       "js"
-    ],
-    "globals": {
-      "__TS_CONFIG__": "tsconfig.json"
-    }
+    ]
   }
 }
