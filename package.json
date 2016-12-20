@@ -5,17 +5,19 @@
   "main": "lib/index.js",
   "author": "1ven",
   "license": "MIT",
-  "dependencies": {
-    "npm-run-all": "3.1.2",
-    "rimraf": "2.5.4",
-    "tslint": "4.1.1",
-    "typescript": "2.1.4"
-  },
   "scripts": {
     "clean": "rimraf lib",
     "lint": "tslint --project .",
     "build": "npm run clean && tsc",
     "test": "",
     "deploy": "npm-run-all -s test lint clean build"
+  },
+  "dependencies": {
+    "jest": "^18.0.0",
+    "npm-run-all": "^3.1.2",
+    "rimraf": "^2.5.4",
+    "ts-jest": "^17.0.3",
+    "tslint": "^4.1.1",
+    "typescript": "^2.1.4"
   }
 }
