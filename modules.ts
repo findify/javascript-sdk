@@ -7,8 +7,3 @@ declare module "faux-jax" {
   const value: any;
   export = value;
 }
-
-declare module "mocha-jsdom" {
-  const value: any;
-  export = value;
-}
