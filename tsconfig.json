@@ -3,10 +3,7 @@
     "outDir": "lib",
     "noImplicitAny": false,
     "module": "commonjs",
-    "target": "es5",
-    "types": [
-      "mocha"
-    ]
+    "target": "es5"
   },
   "files": [
     "./src/index.ts"

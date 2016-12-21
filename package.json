@@ -13,8 +13,12 @@
     "release": "npm-run-all -s test clean build lint"
   },
   "dependencies": {
+    "@types/axios": "^0.9.34",
     "@types/mocha": "^2.2.34",
+    "@types/nock": "^8.2.0",
+    "axios": "^0.15.3",
     "mocha": "^3.2.0",
+    "nock": "^9.0.2",
     "npm-run-all": "^3.1.2",
     "rimraf": "^2.5.4",
     "ts-node": "^1.7.2",
