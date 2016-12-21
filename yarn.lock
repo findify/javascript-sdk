@@ -6,6 +6,10 @@
   version "0.9.34"
   resolved "https://registry.yarnpkg.com/@types/axios/-/axios-0.9.34.tgz#6989cc08948eb0824d8661c5ab5775766ab552b5"
 
+"@types/bluebird@^3.0.36":
+  version "3.0.36"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.0.36.tgz#b804ddd1b1a082cf3e2137dfa7b5287f437c29b7"
+
 "@types/expect@^1.13.31":
   version "1.13.31"
   resolved "https://registry.yarnpkg.com/@types/expect/-/expect-1.13.31.tgz#3290a74f6ee1dce8a77923fbd1f17d9aa25f5246"
@@ -87,6 +91,10 @@ babel-code-frame@^6.20.0:
 balanced-match@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
+
+bluebird@^3.4.6:
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.4.6.tgz#01da8d821d87813d158967e743d5fe6c62cf8c0f"
 
 boxen@^0.6.0:
   version "0.6.0"
