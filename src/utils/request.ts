@@ -8,6 +8,7 @@ import toPlainObject = require('lodash/toPlainObject');
 
 import { resolveUrl } from './resolveUrl';
 import { countBytesInString } from './countBytesInString';
+import { joinParams } from './joinParams';
 
 function request(path: string, requestData: RequestData, settings: Settings) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
@@ -40,7 +41,7 @@ function request(path: string, requestData: RequestData, settings: Settings) {
 
   if (s.method === 'jsonp') {
     return new Promise((resolve, reject) => {
-      jsonp(url + '?' + queryStringParams, {
+      jsonp(joinParams(url, queryStringParams), {
         prefix: s.jsonpCallbackPrefix,
         timeout: 5000,
       }, (err: Error, response) => {
