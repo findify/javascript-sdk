@@ -10,7 +10,7 @@ describe('resolveUrl', () => {
     expectingValue: 'http://site.com/test?hello=world',
   }];
 
-  assertionsData.forEach(item => {
+  assertionsData.forEach((item) => {
     it(`should join url with given "${item.args[1]}" params`, () => {
       expect(joinParams.apply(null, item.args)).toBe(item.expectingValue);
     });
