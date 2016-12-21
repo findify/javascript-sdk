@@ -10,6 +10,9 @@ import { resolveUrl } from './resolveUrl';
 import { countBytesInString } from './countBytesInString';
 import { joinParams } from './joinParams';
 
+// retry couple of times on failure request
+// test browwsers specific code in browserstack or something else
+
 function request(path: string, requestData: RequestData, settings: Settings) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
 
@@ -43,7 +46,7 @@ function request(path: string, requestData: RequestData, settings: Settings) {
     return new Promise((resolve, reject) => {
       jsonp(joinParams(url, queryStringParams), {
         prefix: s.jsonpCallbackPrefix,
-        timeout: 5000,
+        timeout: 1000,
       }, (err: Error, response) => {
         if (err) {
           reject(err);
