@@ -17,7 +17,7 @@
     "@types/bluebird": "^3.0.36",
     "@types/expect": "^1.13.31",
     "@types/jsdom": "^2.0.29",
-    "@types/lodash": "^4.14.44",
+    "@types/lodash": "4.14.30",
     "@types/mocha": "^2.2.34",
     "@types/qs": "^6.2.30",
     "axios": "^0.15.3",

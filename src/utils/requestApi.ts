@@ -2,9 +2,8 @@ import * as qs from 'qs';
 import * as axios from 'axios';
 import * as jsonp from 'jsonp';
 import * as Promise from 'bluebird';
-
-import assign = require('lodash/assign');
-import toPlainObject = require('lodash/toPlainObject');
+import * as assign from 'lodash/assign';
+import * as toPlainObject from 'lodash/toPlainObject';
 
 import { resolveUrl } from './resolveUrl';
 import { countBytesInString } from './countBytesInString';

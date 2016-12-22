@@ -25,9 +25,9 @@
     "@types/jquery" "*"
     "@types/node" "*"
 
-"@types/lodash@^4.14.44":
-  version "4.14.44"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.44.tgz#04585ff0b80d5e434a5f86f15e7964be4f775cba"
+"@types/lodash@4.14.30":
+  version "4.14.30"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.30.tgz#24b818a2a1a6c2d56678804f716e2b7eb791114b"
 
 "@types/mocha@^2.2.34":
   version "2.2.34"
