@@ -13,33 +13,35 @@ import { joinParams } from './joinParams';
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
 
-function request(path: string, requestData: RequestData, settings: Settings) {
+function request(path: string, requestData: RequestData, config: Config) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
 
-  const defaultSettings = {
+  const defaultConfig = {
     method: env === 'node' ? 'post' : 'jsonp',
   };
 
-  const s = assign({}, defaultSettings, settings);
+  const s = assign({}, defaultConfig, config);
 
   const requestDataWithKey = assign({}, requestData, { key: s.apiKey });
   const queryStringParams = qs.stringify(requestDataWithKey);
   const url = resolveUrl(s.host, path);
 
-  if (env === 'node' && settings.method === 'jsonp') {
+  if (env === 'node' && config.method === 'jsonp') {
     throw new Error('jsonp method is not allowed in node environment');
   }
 
   if (s.method === 'post' || countBytesInString(queryStringParams) > 4096) {
-    return axios({
-      url,
-      method: 'POST',
-      data: requestData,
-      headers: {
-        'x-key': s.apiKey,
-        'Content-type': 'application/json',
-      },
-    }).then(({ data }) => data);
+    return new Promise((resolve, reject) => {
+      axios({
+        url,
+        method: 'POST',
+        data: requestData,
+        headers: {
+          'x-key': s.apiKey,
+          'Content-type': 'application/json',
+        },
+      }).then(({ data }) => resolve(data)).catch((err) => reject(err));
+    });
   }
 
   if (s.method === 'jsonp') {
@@ -62,7 +64,7 @@ type RequestData = {
   [key: string]: any,
 };
 
-type Settings = {
+type Config = {
   apiKey: string,
   host: string,
   method?: 'post' | 'jsonp',
@@ -71,4 +73,6 @@ type Settings = {
 
 export {
   request,
+  Config,
+  RequestData,
 }
