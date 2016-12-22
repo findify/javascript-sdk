@@ -6,7 +6,8 @@
     "target": "es5"
   },
   "files": [
-    "./modules.ts",
+    "./modules.d.ts",
+    "./index.d.ts",
     "./src/index.ts"
   ]
 }
