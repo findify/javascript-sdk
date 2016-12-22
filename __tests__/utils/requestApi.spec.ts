@@ -15,7 +15,7 @@ declare const global: {
 describe('request', () => {
   const host = 'http://test-host.com';
   const path = '/test-path';
-  const apiKey = 'testApiKey';
+  const key = 'testApiKey';
 
   beforeEach(() => {
     fauxJax.install();
@@ -27,7 +27,7 @@ describe('request', () => {
 
   describe('jsonp method in browser', () => {
     const requestData = { value: 'testValue' };
-    const makeRequestApi = () => requestApi(path, requestData, { apiKey, host });
+    const makeRequestApi = () => requestApi(path, requestData, { key, host });
     const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
 
     beforeEach((done) => {
@@ -51,7 +51,7 @@ describe('request', () => {
       fauxJax.on('request', (req) => {
         const queryParams = getQueryParams(req.requestURL);
 
-        expect(queryParams.key).toBe(apiKey);
+        expect(queryParams.key).toBe(key);
 
         done();
       });
@@ -115,7 +115,7 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { apiKey, jsonpCallbackPrefix, host })
+      requestApi(path, requestData, { key, jsonpCallbackPrefix, host })
     });
   });
 
@@ -124,7 +124,7 @@ describe('request', () => {
       const requestData = { value: 'testValue' };
       const method = 'jsonp';
 
-      expect(() => requestApi(path, requestData, { apiKey, host, method })).toThrow(/jsonp method is not allowed in node environment/);
+      expect(() => requestApi(path, requestData, { key, host, method })).toThrow(/jsonp method is not allowed in node environment/);
     });
   });
 
@@ -146,7 +146,7 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { apiKey, host });
+      requestApi(path, requestData, { key, host });
     });
 
     it('should use post when { method: "post" } option is provided', (done) => {
@@ -159,13 +159,13 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { apiKey, host, method })
+      requestApi(path, requestData, { key, host, method })
     });
   });
 
   describe('post method in node', () => {
     const requestData = { value: 'testValue' };
-    const makeRequestApi = () => requestApi(path, requestData, { apiKey, host });
+    const makeRequestApi = () => requestApi(path, requestData, { key, host });
 
     it('should use POST in node environment by default', (done) => {
       fauxJax.on('request', (req) => {
@@ -173,12 +173,12 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, {}, { apiKey, host });
+      requestApi(path, {}, { key, host });
     });
 
     it('should send `x-key` param in request headers', (done) => {
       fauxJax.on('request', (req) => {
-        expect(req.requestHeaders['x-key']).toBe(apiKey);
+        expect(req.requestHeaders['x-key']).toBe(key);
         done();
       });
 

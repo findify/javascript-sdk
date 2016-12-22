@@ -12,6 +12,9 @@ import { joinParams } from './joinParams';
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
 
+// remove default params from here. Define them at upper level
+// const method = env === 'node' ? 'post' : config.method,
+
 function requestApi(path: string, requestData: RequestData, config: Config) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
 
@@ -21,7 +24,7 @@ function requestApi(path: string, requestData: RequestData, config: Config) {
 
   const s = assign({}, defaultConfig, config);
 
-  const requestDataWithKey = assign({}, requestData, { key: s.apiKey });
+  const requestDataWithKey = assign({}, requestData, { key: s.key });
   const queryStringParams = qs.stringify(requestDataWithKey);
   const url = resolveUrl(s.host, path);
 
@@ -36,7 +39,7 @@ function requestApi(path: string, requestData: RequestData, config: Config) {
         method: 'POST',
         data: requestData,
         headers: {
-          'x-key': s.apiKey,
+          'x-key': s.key,
           'Content-type': 'application/json',
         },
       }).then(({ data }) => resolve(data)).catch((err) => reject(err));
@@ -64,7 +67,7 @@ type RequestData = {
 };
 
 type Config = {
-  apiKey: string,
+  key: string,
   host: string,
   method?: 'post' | 'jsonp',
   jsonpCallbackPrefix?: string,
