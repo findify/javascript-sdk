@@ -13,7 +13,7 @@ import { joinParams } from './joinParams';
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
 
-function request(path: string, requestData: RequestData, config: Config) {
+function requestApi(path: string, requestData: RequestData, config: Config) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
 
   const defaultConfig = {
@@ -72,7 +72,7 @@ type Config = {
 };
 
 export {
-  request,
+  requestApi,
   Config,
   RequestData,
 }

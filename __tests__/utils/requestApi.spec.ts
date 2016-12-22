@@ -5,7 +5,7 @@ import * as qs from 'qs';
 import * as url from 'url';
 import { toPlainObject } from 'lodash';
 
-import { request } from '../../src/utils/request';
+import { requestApi } from '../../src/utils/requestApi';
 
 declare const global: {
   window: any,
@@ -27,7 +27,7 @@ describe('request', () => {
 
   describe('jsonp method in browser', () => {
     const requestData = { value: 'testValue' };
-    const makeRequest = () => request(path, requestData, { apiKey, host });
+    const makeRequestApi = () => requestApi(path, requestData, { apiKey, host });
     const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
 
     beforeEach((done) => {
@@ -44,7 +44,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should send `x-key` param in request params', (done) => {
@@ -56,7 +56,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should send request to url, according to given host and path', (done) => {
@@ -68,7 +68,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should send `requestData` variable as request params', (done) => {
@@ -80,7 +80,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should resolve server response body', (done) => {
@@ -96,7 +96,7 @@ describe('request', () => {
         req.respond(200, {}, `typeof ${callback} === 'function' && ${callback}(${JSON.stringify(responseBody)})`);
       });
 
-      makeRequest()
+      makeRequestApi()
         .then((response) => {
           expect(response).toEqual(responseBody);
           done();
@@ -115,7 +115,7 @@ describe('request', () => {
         done();
       });
 
-      request(path, requestData, { apiKey, jsonpCallbackPrefix, host })
+      requestApi(path, requestData, { apiKey, jsonpCallbackPrefix, host })
     });
   });
 
@@ -124,7 +124,7 @@ describe('request', () => {
       const requestData = { value: 'testValue' };
       const method = 'jsonp';
 
-      expect(() => request(path, requestData, { apiKey, host, method })).toThrow(/jsonp method is not allowed in node environment/);
+      expect(() => requestApi(path, requestData, { apiKey, host, method })).toThrow(/jsonp method is not allowed in node environment/);
     });
   });
 
@@ -146,7 +146,7 @@ describe('request', () => {
         done();
       });
 
-      request(path, requestData, { apiKey, host });
+      requestApi(path, requestData, { apiKey, host });
     });
 
     it('should use post when { method: "post" } option is provided', (done) => {
@@ -159,13 +159,13 @@ describe('request', () => {
         done();
       });
 
-      request(path, requestData, { apiKey, host, method })
+      requestApi(path, requestData, { apiKey, host, method })
     });
   });
 
   describe('post method in node', () => {
     const requestData = { value: 'testValue' };
-    const makeRequest = () => request(path, requestData, { apiKey, host });
+    const makeRequestApi = () => requestApi(path, requestData, { apiKey, host });
 
     it('should use POST in node environment by default', (done) => {
       fauxJax.on('request', (req) => {
@@ -173,7 +173,7 @@ describe('request', () => {
         done();
       });
 
-      request(path, {}, { apiKey, host });
+      requestApi(path, {}, { apiKey, host });
     });
 
     it('should send `x-key` param in request headers', (done) => {
@@ -182,7 +182,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should send request to url, according to given host and path', (done) => {
@@ -191,7 +191,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should send `requestData` variable as request body', (done) => {
@@ -200,7 +200,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should set `content-type: application/json` in request headers', (done) => {
@@ -209,7 +209,7 @@ describe('request', () => {
         done();
       });
 
-      makeRequest();
+      makeRequestApi();
     });
 
     it('should resolve server response body', (done) => {
@@ -223,7 +223,7 @@ describe('request', () => {
         }, JSON.stringify(responseBody));
       });
 
-      makeRequest()
+      makeRequestApi()
         .then((response) => {
           expect(response).toEqual(responseBody);
           done();
