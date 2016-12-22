@@ -3,7 +3,7 @@ import * as jsdom from 'jsdom';
 declare const global: {
   window: any,
   document: any,
-}
+};
 
 function setupJsDom(onInit?) {
   jsdom.env({
@@ -16,7 +16,9 @@ function setupJsDom(onInit?) {
       global.window = window;
       global.document = window.document;
 
-      onInit && onInit();
+      if (onInit) {
+        onInit();
+      }
     },
   });
 }

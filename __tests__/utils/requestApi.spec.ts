@@ -111,7 +111,7 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { key, jsonpCallbackPrefix, host, method })
+      requestApi(path, requestData, { key, jsonpCallbackPrefix, host, method });
     });
   });
 
@@ -120,7 +120,11 @@ describe('request', () => {
       const requestData = { value: 'testValue' };
       const method = 'jsonp';
 
-      expect(() => requestApi(path, requestData, { key, host, method })).toThrow(/jsonp method is not allowed in node environment/);
+      expect(() => requestApi(path, requestData, {
+        key,
+        host,
+        method,
+      })).toThrow(/jsonp method is not allowed in node environment/);
     });
   });
 
@@ -156,7 +160,7 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { key, host, method })
+      requestApi(path, requestData, { key, host, method });
     });
   });
 
