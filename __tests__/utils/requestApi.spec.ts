@@ -1,16 +1,11 @@
 import * as fauxJax from 'faux-jax';
 import * as expect from 'expect';
-import * as jsdom from 'jsdom';
 import * as qs from 'qs';
 import * as url from 'url';
 import { toPlainObject } from 'lodash';
+import { setupJsDom, teardownJsDom } from '../jsdom-helper';
 
 import { requestApi } from '../../src/utils/requestApi';
-
-declare const global: {
-  window: any,
-  document: any,
-}
 
 describe('request', () => {
   const host = 'http://test-host.com';
@@ -138,7 +133,7 @@ describe('request', () => {
       teardownJsDom();
     });
 
-    it('should use POST for requests bigger than 4096 bytes by default when { method: "jsonp" } is provided', (done) => {
+    it('should use POST for requests bigger than 4096 bytes when { method: "jsonp" } is provided', (done) => {
       const requestData = { value: (new Array(4097)).join('.') };
       const method = 'jsonp';
 
@@ -235,24 +230,3 @@ describe('request', () => {
     });
   });
 });
-
-function setupJsDom(onInit?) {
-  jsdom.env({
-    html: '<!DOCTYPE html><html><head></head><body></body></html>',
-    features: {
-      FetchExternalResources: ['script'],
-      ProcessExternalResources: ['script'],
-    },
-    done: (err, window) => {
-      global.window = window;
-      global.document = window.document;
-
-      onInit && onInit();
-    },
-  });
-}
-
-function teardownJsDom() {
-  delete global.window;
-  delete global.document;
-}
