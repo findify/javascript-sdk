@@ -27,7 +27,8 @@ describe('request', () => {
 
   describe('jsonp method in browser', () => {
     const requestData = { value: 'testValue' };
-    const makeRequestApi = () => requestApi(path, requestData, { key, host });
+    const method = 'jsonp';
+    const makeRequestApi = () => requestApi(path, requestData, { key, host, method });
     const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
 
     beforeEach((done) => {
@@ -38,7 +39,7 @@ describe('request', () => {
       teardownJsDom();
     });
 
-    it('should use jsonp for requests smaller than 4096 bytes by default', (done) => {
+    it('should use jsonp when { method: "jsonp" } is provided', (done) => {
       fauxJax.on('request', (req) => {
         expect(req.requestMethod).toBe('GET');
         done();
@@ -115,7 +116,7 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { key, jsonpCallbackPrefix, host })
+      requestApi(path, requestData, { key, jsonpCallbackPrefix, host, method })
     });
   });
 
@@ -137,8 +138,9 @@ describe('request', () => {
       teardownJsDom();
     });
 
-    it('should use post for requests bigger than 4096 bytes by default', (done) => {
+    it('should use POST for requests bigger than 4096 bytes by default when { method: "jsonp" } is provided', (done) => {
       const requestData = { value: (new Array(4097)).join('.') };
+      const method = 'jsonp';
 
       fauxJax.on('request', (req) => {
         expect(req.requestMethod).toBe('POST');
@@ -146,10 +148,10 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { key, host });
+      requestApi(path, requestData, { key, host, method });
     });
 
-    it('should use post when { method: "post" } option is provided', (done) => {
+    it('should use POST when { method: "post" } option is provided', (done) => {
       const requestData = { value: 'testValue' };
       const method = 'post';
 
@@ -165,15 +167,16 @@ describe('request', () => {
 
   describe('post method in node', () => {
     const requestData = { value: 'testValue' };
-    const makeRequestApi = () => requestApi(path, requestData, { key, host });
+    const method = 'post';
+    const makeRequestApi = () => requestApi(path, requestData, { key, host, method });
 
-    it('should use POST in node environment by default', (done) => {
+    it('should use POST in node environment when { method: "post" } is provided', (done) => {
       fauxJax.on('request', (req) => {
         expect(req.requestMethod).toBe('POST');
         done();
       });
 
-      requestApi(path, {}, { key, host });
+      requestApi(path, {}, { key, host, method });
     });
 
     it('should send `x-key` param in request headers', (done) => {
