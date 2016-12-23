@@ -1,4 +1,5 @@
 import * as assign from 'lodash/assign';
+import * as every from 'lodash/every';
 
 import { requestApi, Config as RequestApiConfig } from './utils/requestApi';
 
@@ -57,6 +58,38 @@ class SDK {
 
     return requestApi('/autocomplete', extendedRequest, this.requestApiConfig);
   }
+
+  public search(request: FindifySDK.SearchRequest) {
+    if (!request || typeof request.q === 'undefined') {
+      throw new Error('"q" param is required');
+    }
+
+    const { filters, sort } = request;
+
+    if (filters && !everyKey(filters, 'name')) {
+      throw new Error('"filters.name" param is required');
+    }
+
+    if (filters && !everyKey(filters, 'type')) {
+      throw new Error('"filters.type" param is required');
+    }
+
+    if (sort && !everyKey(sort, 'field')) {
+      throw new Error('"sort.field" param is required');
+    }
+
+    if (sort && !everyKey(sort, 'order')) {
+      throw new Error('"sort.order" param is required');
+    }
+
+    const extendedRequest = this.makeExtendedRequest(request);
+
+    return requestApi('/search', extendedRequest, this.requestApiConfig);
+  }
+}
+
+function everyKey(collection, key) {
+  return every(collection, (item) => typeof item[key] !== 'undefined');
 }
 
 type ExtendedRequest<Request> = Request & {
