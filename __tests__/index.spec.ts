@@ -258,6 +258,22 @@ describe('FindifySDK', () => {
       });
     });
 
+    it('should trow validation Error if "q" param is not provided', () => {
+      const sdk = new FindifySDK({
+        key,
+        method: 'post',
+        user: {
+          uid: 'testUserId',
+          sid: 'testSessionId',
+        },
+      });
+
+      const errorRegex = /"q" param is required/;
+
+      expect(() => (sdk as any).autocomplete()).toThrow(errorRegex);
+      expect(() => (sdk as any).autocomplete({})).toThrow(errorRegex);
+    });
+
     it('should throw validation Error if "user.uid" param is not provided at library configuration', () => {
       const sdk = new (FindifySDK as any)({
         key,

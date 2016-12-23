@@ -49,6 +49,10 @@ class SDK {
   }
 
   public autocomplete(request: FindifySDK.AutocompleteRequest) {
+    if (!request || typeof request.q === 'undefined') {
+      throw new Error('"q" param is required');
+    }
+
     const extendedRequest = this.makeExtendedRequest(request);
 
     return requestApi('/autocomplete', extendedRequest, this.requestApiConfig);
