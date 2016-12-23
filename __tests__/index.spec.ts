@@ -60,10 +60,33 @@ describe('FindifySDK', () => {
       sdk.autocomplete({
         q: 'test',
       });
-    }
+    };
 
-    // make them separate from rest tests
-    // do not repeat`it` titles?
+    const makeAutocompleteWithUser = (sdk) => {
+      sdk.autocomplete({
+        q: 'test',
+        user,
+      });
+    };
+
+    const makeAutocompleteWithSid = (sdk) => {
+      (sdk as any).autocomplete({
+        q: 'test',
+        user: {
+          sid: 'testSessionId',
+        },
+      });
+    };
+
+    const makeAutocompleteWithUid = (sdk) => {
+      (sdk as any).autocomplete({
+        q: 'test',
+        user: {
+          uid: 'testUserId',
+        },
+      });
+    };
+
     it('should use jsonp by default if "method" is not provided at config', jsonpByDefaultRequestMethodCase(makeAutocomplete));
     it('should use jsonp if { method: "jsonp" } is provided', jsonpRequestMethodCase(makeAutocomplete));
     it('should use POST if { method: "post" } is provided', postRequestMethodCase(makeAutocomplete));
@@ -73,35 +96,12 @@ describe('FindifySDK', () => {
     it('should add "log" param to request body if it`s provided at sdk initialization', logConfigParamCase(makeAutocomplete));
     it('should provide "key" param to headers', keyParamsInHeadersCase(key, makeAutocomplete));
     it('should add jsonp callback prefix as "findifyCallback"', jsonpCallbackPrefixCase(makeAutocomplete));
-    it('it should send requests to "https://api-v3.findify.io"', apiHostnameCase(makeAutocomplete));
+    it('should send requests to "https://api-v3.findify.io"', apiHostnameCase(makeAutocomplete));
+    it('should add "user" param to request body if it`s provided as a request method param', userParamRequestBodyAtRequestCase(user, makeAutocompleteWithUser));
     it('should throw validation Error if "user.uid" param is not provided at library configuration', uidParamExistanceAtConfigurationCase(makeAutocomplete));
     it('should throw validation Error if "user.sid" param is not provided at library configuration', sidParamExistanceAtConfigurationCase(makeAutocomplete));
-
-    it('should add "user" param to request body if it`s provided as a request method param', userParamRequestBodyAtRequestCase(user, (sdk) => {
-      sdk.autocomplete({
-        q: 'test',
-        user,
-      });
-    }));
-
-    it('should throw validation Error if "user.uid" param is not provided at request', uidParamExistanceAtRequestCase((sdk) => {
-      (sdk as any).autocomplete({
-        q: 'test',
-        user: {
-          sid: 'testSessionId',
-        },
-      });
-    }));
-
-    it('should throw validation Error if "user.sid" param is not provided at request', sidParamExistanceAtRequestCase((sdk) => {
-      (sdk as any).autocomplete({
-        q: 'test',
-        user: {
-          uid: 'testUserId',
-        },
-      });
-    }));
-    //
+    it('should throw validation Error if "user.uid" param is not provided at request', uidParamExistanceAtRequestCase(makeAutocompleteWithSid));
+    it('should throw validation Error if "user.sid" param is not provided at request', sidParamExistanceAtRequestCase(makeAutocompleteWithUid));
 
     it('should add passed request params to request body', (done) => {
       const request = {
