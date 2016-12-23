@@ -23,6 +23,10 @@ class SDK {
       throw new Error('"user.uid" param is required');
     }
 
+    if (typeof user.sid === 'undefined') {
+      throw new Error('"user.sid" param is required');
+    }
+
     return extendedRequest;
   }
 
