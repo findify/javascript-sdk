@@ -62,6 +62,8 @@ describe('FindifySDK', () => {
       });
     }
 
+    // make them separate from rest tests
+    // do not repeat`it` titles?
     it('should use jsonp by default if "method" is not provided at config', jsonpByDefaultRequestMethodCase(makeAutocomplete));
     it('should use jsonp if { method: "jsonp" } is provided', jsonpRequestMethodCase(makeAutocomplete));
     it('should use POST if { method: "post" } is provided', postRequestMethodCase(makeAutocomplete));
@@ -99,6 +101,7 @@ describe('FindifySDK', () => {
         },
       });
     }));
+    //
 
     it('should add passed request params to request body', (done) => {
       const request = {
