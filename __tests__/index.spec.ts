@@ -25,6 +25,15 @@ describe('FindifySDK', () => {
     it('should be instantiated', () => {
       const sdk = new FindifySDK({ key });
     });
+
+    it('should throw validation error if "key" param is not provided', () => {
+      expect(() => new (FindifySDK as any)()).toThrow(/"key" param is required/);
+      expect(() => new (FindifySDK as any)({})).toThrow(/"key" param is required/);
+    });
+
+    // it('should throw validation error if "key" param is not string', () => {
+    //   expect(() => new FindifySDK({ key: 1 })).toThrow(/"key" param should be a string/);
+    // });
   });
 
   describe('autocomplete', () => {

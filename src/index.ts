@@ -28,6 +28,10 @@ class SDK {
   }
 
   public constructor(config: FindifySDK.Config) {
+    if (!config || typeof config.key === 'undefined') {
+      throw new Error('"key" param is required');
+    }
+
     this.config = config;
     this.requestApiConfig = this.makeRequestApiConfig();
   }
