@@ -111,6 +111,23 @@ describe('autocomplete', () => {
     sdk.autocomplete(request);
   });
 
+  it('should send request to /autocomplete endpoint', (done) => {
+    fauxJax.on('request', (req) => {
+      expect(req.requestURL.indexOf('/autocomplete') > -1).toBe(true);
+      done();
+    });
+
+    const sdk = new FindifySDK({
+      key,
+      method: 'post',
+      user,
+    });
+
+    sdk.autocomplete({
+      q: 'test',
+    });
+  });
+
   it('should throw validation Error if "q" param is not provided', () => {
     const sdk = new FindifySDK({
       key,
