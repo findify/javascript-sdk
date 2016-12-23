@@ -1,5 +1,6 @@
 import * as assign from 'lodash/assign';
 import * as every from 'lodash/every';
+import * as omit from 'lodash/omit';
 
 import { requestApi, Config as RequestApiConfig } from './utils/requestApi';
 
@@ -86,6 +87,35 @@ class SDK {
 
     return requestApi('/search', extendedRequest, this.requestApiConfig);
   }
+
+  public collection(request: FindifySDK.CollectionRequest) {
+    if (!request || typeof request.slot === 'undefined') {
+      throw new Error('"slot" param is required');
+    }
+
+    const { filters, sort } = request;
+
+    if (filters && !everyKey(filters, 'name')) {
+      throw new Error('"filters.name" param is required');
+    }
+
+    if (filters && !everyKey(filters, 'type')) {
+      throw new Error('"filters.type" param is required');
+    }
+
+    if (sort && !everyKey(sort, 'field')) {
+      throw new Error('"sort.field" param is required');
+    }
+
+    if (sort && !everyKey(sort, 'order')) {
+      throw new Error('"sort.order" param is required');
+    }
+
+    const extendedRequest = this.makeExtendedRequest(request);
+    const emittedRequest = omit(extendedRequest, ['slot']);
+
+    return requestApi(`/collection/${request.slot}`, emittedRequest, this.requestApiConfig);
+  }
 }
 
 function everyKey(collection, key) {
@@ -98,6 +128,10 @@ type ExtendedRequest<Request> = Request & {
   log?: boolean,
 };
 
-type Request = FindifySDK.AutocompleteRequest;
+type Request = (
+  FindifySDK.AutocompleteRequest |
+  FindifySDK.SearchRequest |
+  FindifySDK.CollectionRequest
+);
 
 export default SDK;
