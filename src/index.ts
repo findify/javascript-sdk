@@ -7,11 +7,17 @@ class SDK {
   private requestApiConfig: RequestApiConfig;
 
   private makeExtendedRequest(request: Request) {
-    return assign({}, {
+    const extendedRequest = assign({}, {
       user: this.config.user,
       log: this.config.log,
       t_client: (new Date()).getTime(),
     }, request);
+
+    if (!extendedRequest.user) {
+      throw new Error('`user` param should be provided at request or at library config');
+    }
+
+    return extendedRequest;
   }
 
   private makeRequestApiConfig() {
@@ -21,10 +27,6 @@ class SDK {
       method: this.config.method || 'jsonp',
       key: this.config.key,
     };
-  }
-
-  private throwUserArgError() {
-    throw new Error('`user` param should be provided at request or at library config');
   }
 
   public constructor(config: FindifySDK.Config) {
@@ -38,10 +40,6 @@ class SDK {
 
   public autocomplete(request: FindifySDK.AutocompleteRequest) {
     const extendedRequest = this.makeExtendedRequest(request);
-
-    if (!extendedRequest.user) {
-      this.throwUserArgError();
-    }
 
     return requestApi('/autocomplete', extendedRequest, this.requestApiConfig);
   }
