@@ -257,5 +257,33 @@ describe('FindifySDK', () => {
         q: 'test',
       });
     });
+
+    it('should throw validation Error if "user.uid" param is not provided at library configuration', () => {
+      const sdk = new (FindifySDK as any)({
+        key,
+        method: 'post',
+        user: {
+          sid: 'testSessionId',
+        },
+      });
+
+      expect(() => sdk.autocomplete({
+        q: 'test',
+      })).toThrow(/"user.uid" param is required/);
+    });
+
+    it('should throw validation Error if "user.uid" param is not provided at request', () => {
+      const sdk = new FindifySDK({
+        key,
+        method: 'post',
+      });
+
+      expect(() => (sdk as any).autocomplete({
+        q: 'test',
+        user: {
+          sid: 'testSessionId',
+        },
+      })).toThrow(/"user.uid" param is required/);
+    });
   });
 });

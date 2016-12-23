@@ -13,8 +13,14 @@ class SDK {
       t_client: (new Date()).getTime(),
     }, request);
 
-    if (!extendedRequest.user) {
+    const { user } = extendedRequest;
+
+    if (typeof user === 'undefined') {
       throw new Error('`user` param should be provided at request or at library config');
+    }
+
+    if (typeof user.uid === 'undefined') {
+      throw new Error('"user.uid" param is required');
     }
 
     return extendedRequest;
