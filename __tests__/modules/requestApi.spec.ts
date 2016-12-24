@@ -27,7 +27,7 @@ describe('requestApi', () => {
     describe('jsonp method in browser', () => {
       const requestData = { value: 'testValue' };
       const method = 'jsonp';
-      const makeRequestApi = () => requestApi(path, requestData, { key, user });
+      const makeRequestApi = () => requestApi(path, requestData, { key, user, method });
       const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
 
       beforeEach((done) => {
@@ -36,6 +36,15 @@ describe('requestApi', () => {
 
       afterEach(() => {
         teardownJsDom();
+      });
+
+      it('should use jsonp method in browser by default', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestMethod).toBe('GET');
+          done();
+        });
+
+        requestApi(path, requestData, { key, user });
       });
 
       it('should use jsonp when { method: "jsonp" } is provided', (done) => {
@@ -147,6 +156,15 @@ describe('requestApi', () => {
       const method = 'post';
       const makeRequestApi = () => requestApi(path, requestData, { key, method, user });
 
+      it('should use POST in node environment by default', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestMethod).toBe('POST');
+          done();
+        });
+
+        requestApi(path, {}, { key, user });
+      });
+
       it('should use POST in node environment when { method: "post" } is provided', (done) => {
         fauxJax.on('request', (req) => {
           expect(req.requestMethod).toBe('POST');
@@ -223,9 +241,19 @@ describe('requestApi', () => {
       });
     });
 
-    it('should add "method" as "jsonp" by default if nothing was provided', () => {
+    it('should add "method" as "jsonp" by default if nothing was provided in browser', (done) => {
+      setupJsDom(() => {
+        expect(makeSettings({ key })).toContain({
+          method: 'jsonp',
+        });
+        teardownJsDom();
+        done();
+      });
+    });
+
+    it('should add "method" as "post" by default if nothing was provided in node', () => {
       expect(makeSettings({ key })).toContain({
-        method: 'jsonp',
+        method: 'post',
       });
     });
 

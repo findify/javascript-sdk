@@ -13,8 +13,10 @@ import { joinParams } from '../utils/joinParams';
 // test browwsers specific code in browserstack or something else
 // we should reject same errors not depending on request type
 
+// node should have post by default. write test for both envs
 function requestApi(endpoint: string, request: FindifySDK.Request, config: FindifySDK.Config) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
+
   const settings = makeSettings(config);
 
   if (env === 'node' && settings.method === 'jsonp') {
@@ -82,10 +84,12 @@ function extendRequest(request: FindifySDK.Request, config: FindifySDK.Config): 
 }
 
 function makeSettings(config: FindifySDK.Config): Settings {
+  const env = typeof window === 'undefined' ? 'node' : 'browser';
+
   return {
     host: 'https://api-v3.findify.io',
     jsonpCallbackPrefix: 'findifyCallback',
-    method: config.method || 'jsonp',
+    method: config.method || (env === 'browser' ? 'jsonp' : 'post'),
     key: config.key,
   };
 }
