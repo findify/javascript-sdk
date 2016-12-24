@@ -55,7 +55,7 @@ function requestApi(endpoint: string, requestData: RequestData, config: FindifyS
   }
 }
 
-function makeSettings(config: FindifySDK.Config): Settings {
+export function makeSettings(config: FindifySDK.Config): Settings {
   return {
     host: 'https://api-v3.findify.io',
     jsonpCallbackPrefix: 'findifyCallback',

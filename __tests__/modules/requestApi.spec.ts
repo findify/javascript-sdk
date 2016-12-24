@@ -5,9 +5,9 @@ import * as url from 'url';
 import { toPlainObject } from 'lodash';
 import { setupJsDom, teardownJsDom } from '../jsdom-helper';
 
-import { requestApi } from '../../src/modules/requestApi';
+import { requestApi, makeSettings } from '../../src/modules/requestApi';
 
-describe('request', () => {
+describe('requestApi', () => {
   const path = '/test-path';
   const key = 'testApiKey';
 
@@ -19,181 +19,213 @@ describe('request', () => {
     fauxJax.restore();
   });
 
-  describe('jsonp method in browser', () => {
-    const requestData = { value: 'testValue' };
-    const method = 'jsonp';
-    const makeRequestApi = () => requestApi(path, requestData, { key });
-    const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
-
-    beforeEach((done) => {
-      setupJsDom(() => done());
-    });
-
-    afterEach(() => {
-      teardownJsDom();
-    });
-
-    it('should use jsonp when { method: "jsonp" } is provided', (done) => {
-      fauxJax.on('request', (req) => {
-        expect(req.requestMethod).toBe('GET');
-        done();
-      });
-
-      makeRequestApi();
-    });
-
-    it('should send `x-key` param in request params', (done) => {
-      fauxJax.on('request', (req) => {
-        const queryParams = getQueryParams(req.requestURL);
-
-        expect(queryParams.key).toBe(key);
-
-        done();
-      });
-
-      makeRequestApi();
-    });
-
-    it('should send `requestData` variable as request params', (done) => {
-      fauxJax.on('request', (req) => {
-        const queryParams = getQueryParams(req.requestURL);
-
-        expect(queryParams.value).toBe(requestData.value);
-
-        done();
-      });
-
-      makeRequestApi();
-    });
-
-    it('should resolve server response body', (done) => {
-      const responseBody = {
-        value: 'test response body value',
-        value2: 'test response body value2',
-        value3: 'test response body value3',
-      };
-
-      fauxJax.on('request', (req) => {
-        const { callback } = getQueryParams(req.requestURL);
-
-        req.respond(200, {}, `typeof ${callback} === 'function' && ${callback}(${JSON.stringify(responseBody)})`);
-      });
-
-      makeRequestApi()
-        .then((response) => {
-          expect(response).toEqual(responseBody);
-          done();
-        })
-        .catch(done);
-    });
-  });
-
-  describe('jsonp method in node', () => {
-    it('should throw an Error when { method: "jsonp" } option is provided', () => {
+  describe('generic', () => {
+    describe('jsonp method in browser', () => {
       const requestData = { value: 'testValue' };
       const method = 'jsonp';
+      const makeRequestApi = () => requestApi(path, requestData, { key });
+      const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
 
-      expect(() => requestApi(path, requestData, {
-        key,
-        method,
-      })).toThrow(/jsonp method is not allowed in node environment/);
-    });
-  });
-
-  describe('post method in browser', () => {
-    beforeEach((done) => {
-      setupJsDom(() => done());
-    });
-
-    afterEach(() => {
-      teardownJsDom();
-    });
-
-    it('should use POST for requests bigger than 4096 bytes when { method: "jsonp" } is provided', (done) => {
-      const requestData = { value: (new Array(4097)).join('.') };
-      const method = 'jsonp';
-
-      fauxJax.on('request', (req) => {
-        expect(req.requestMethod).toBe('POST');
-
-        done();
+      beforeEach((done) => {
+        setupJsDom(() => done());
       });
 
-      requestApi(path, requestData, { key, method });
+      afterEach(() => {
+        teardownJsDom();
+      });
+
+      it('should use jsonp when { method: "jsonp" } is provided', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestMethod).toBe('GET');
+          done();
+        });
+
+        makeRequestApi();
+      });
+
+      it('should send `x-key` param in request params', (done) => {
+        fauxJax.on('request', (req) => {
+          const queryParams = getQueryParams(req.requestURL);
+
+          expect(queryParams.key).toBe(key);
+
+          done();
+        });
+
+        makeRequestApi();
+      });
+
+      it('should send `requestData` variable as request params', (done) => {
+        fauxJax.on('request', (req) => {
+          const queryParams = getQueryParams(req.requestURL);
+
+          expect(queryParams.value).toBe(requestData.value);
+
+          done();
+        });
+
+        makeRequestApi();
+      });
+
+      it('should resolve server response body', (done) => {
+        const responseBody = {
+          value: 'test response body value',
+          value2: 'test response body value2',
+          value3: 'test response body value3',
+        };
+
+        fauxJax.on('request', (req) => {
+          const { callback } = getQueryParams(req.requestURL);
+
+          req.respond(200, {}, `typeof ${callback} === 'function' && ${callback}(${JSON.stringify(responseBody)})`);
+        });
+
+        makeRequestApi()
+          .then((response) => {
+            expect(response).toEqual(responseBody);
+            done();
+          })
+          .catch(done);
+      });
     });
 
-    it('should use POST when { method: "post" } option is provided', (done) => {
+    describe('jsonp method in node', () => {
+      it('should throw an Error when { method: "jsonp" } option is provided', () => {
+        const requestData = { value: 'testValue' };
+        const method = 'jsonp';
+
+        expect(() => requestApi(path, requestData, {
+          key,
+          method,
+        })).toThrow(/jsonp method is not allowed in node environment/);
+      });
+    });
+
+    describe('post method in browser', () => {
+      beforeEach((done) => {
+        setupJsDom(() => done());
+      });
+
+      afterEach(() => {
+        teardownJsDom();
+      });
+
+      it('should use POST for requests bigger than 4096 bytes when { method: "jsonp" } is provided', (done) => {
+        const requestData = { value: (new Array(4097)).join('.') };
+        const method = 'jsonp';
+
+        fauxJax.on('request', (req) => {
+          expect(req.requestMethod).toBe('POST');
+
+          done();
+        });
+
+        requestApi(path, requestData, { key, method });
+      });
+
+      it('should use POST when { method: "post" } option is provided', (done) => {
+        const requestData = { value: 'testValue' };
+        const method = 'post';
+
+        fauxJax.on('request', (req) => {
+          expect(req.requestMethod).toBe('POST');
+
+          done();
+        });
+
+        requestApi(path, requestData, { key, method });
+      });
+    });
+
+    describe('post method in node', () => {
       const requestData = { value: 'testValue' };
       const method = 'post';
+      const makeRequestApi = () => requestApi(path, requestData, { key, method });
 
-      fauxJax.on('request', (req) => {
-        expect(req.requestMethod).toBe('POST');
+      it('should use POST in node environment when { method: "post" } is provided', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestMethod).toBe('POST');
+          done();
+        });
 
-        done();
+        requestApi(path, {}, { key, method });
       });
 
-      requestApi(path, requestData, { key, method });
+      it('should send `x-key` param in request headers', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestHeaders['x-key']).toBe(key);
+          done();
+        });
+
+        makeRequestApi();
+      });
+
+      it('should send `requestData` variable as request body', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestBody).toBe(JSON.stringify(requestData));
+          done();
+        });
+
+        makeRequestApi();
+      });
+
+      it('should set `content-type: application/json` in request headers', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestHeaders['content-type']).toBe('application/json');
+          done();
+        });
+
+        makeRequestApi();
+      });
+
+      it('should resolve server response body', (done) => {
+        const responseBody = {
+          value: 'test response body value',
+        };
+
+        fauxJax.on('request', (req) => {
+          req.respond(200, {
+            'Content-Type': 'application/json',
+          }, JSON.stringify(responseBody));
+        });
+
+        makeRequestApi()
+          .then((response) => {
+            expect(response).toEqual(responseBody);
+            done();
+          })
+          .catch(done);
+      });
     });
   });
 
-  describe('post method in node', () => {
-    const requestData = { value: 'testValue' };
-    const method = 'post';
-    const makeRequestApi = () => requestApi(path, requestData, { key, method });
-
-    it('should use POST in node environment when { method: "post" } is provided', (done) => {
-      fauxJax.on('request', (req) => {
-        expect(req.requestMethod).toBe('POST');
-        done();
+  describe('makeSettings', () => {
+    it('should add "host" as "https://api-v3.findify.io"', () => {
+      expect(makeSettings({ key })).toContain({
+        host: 'https://api-v3.findify.io',
       });
-
-      requestApi(path, {}, { key, method });
     });
 
-    it('should send `x-key` param in request headers', (done) => {
-      fauxJax.on('request', (req) => {
-        expect(req.requestHeaders['x-key']).toBe(key);
-        done();
+    it('should add "jsonpCallbackPrefix" as "findifyCallback"', () => {
+      expect(makeSettings({ key })).toContain({
+        jsonpCallbackPrefix: 'findifyCallback',
       });
-
-      makeRequestApi();
     });
 
-    it('should send `requestData` variable as request body', (done) => {
-      fauxJax.on('request', (req) => {
-        expect(req.requestBody).toBe(JSON.stringify(requestData));
-        done();
+    it('should add "method" as provided "method" value', () => {
+      expect(makeSettings({ key, method: 'post' })).toContain({
+        method: 'post',
       });
-
-      makeRequestApi();
     });
 
-    it('should set `content-type: application/json` in request headers', (done) => {
-      fauxJax.on('request', (req) => {
-        expect(req.requestHeaders['content-type']).toBe('application/json');
-        done();
+    it('should add "method" as "jsonp" by default if nothing was provided', () => {
+      expect(makeSettings({ key })).toContain({
+        method: 'jsonp',
       });
-
-      makeRequestApi();
     });
 
-    it('should resolve server response body', (done) => {
-      const responseBody = {
-        value: 'test response body value',
-      };
-
-      fauxJax.on('request', (req) => {
-        req.respond(200, {
-          'Content-Type': 'application/json',
-        }, JSON.stringify(responseBody));
-      });
-
-      makeRequestApi()
-        .then((response) => {
-          expect(response).toEqual(responseBody);
-          done();
-        })
-        .catch(done);
+    it('should add "key" as provided "key" value', () => {
+      expect(makeSettings({ key })).toContain({ key });
     });
   });
 });
