@@ -3,13 +3,6 @@ import * as expect from 'expect';
 import * as assign from 'lodash/assign';
 import * as omit from 'lodash/omit';
 
-import {
-  filterNameParamExistanceCase,
-  filterTypeParamExistanceCase,
-  sortFieldParamExistanceCase,
-  sortOrderParamExistanceCase,
-} from './results-helper';
-
 import FindifySDK from '../src/index';
 
 const key = 'testApiKey';
@@ -142,40 +135,4 @@ describe('collection', () => {
     expect(() => (sdk as any).collection()).toThrow(errorRegex);
     expect(() => (sdk as any).collection({})).toThrow(errorRegex);
   });
-
-  it('should throw validation Error if "filters.name" param is not provided', filterNameParamExistanceCase((sdk) => {
-    sdk.collection({
-      slot: 'test',
-      filters: [{
-        type: 'testType',
-      }],
-    });
-  }));
-
-  it('should throw validation Error if "filters.type" param is not provided', filterTypeParamExistanceCase((sdk) => {
-    sdk.collection({
-      slot: 'test',
-      filters: [{
-        name: 'testFilter',
-      }],
-    });
-  }));
-
-  it('should throw validation Error if "sort.field" param is not provided', sortFieldParamExistanceCase((sdk) => {
-    sdk.collection({
-      slot: 'test',
-      sort: [{
-        order: 'testOrder',
-      }],
-    });
-  }));
-
-  it('should throw validation Error if "sort.order" param is not provided', sortOrderParamExistanceCase((sdk) => {
-    sdk.collection({
-      slot: 'test',
-      sort: [{
-        field: 'testField',
-      }],
-    });
-  }));
 });
