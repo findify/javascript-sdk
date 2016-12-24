@@ -245,14 +245,14 @@ describe('FindifySDK', () => {
   });
 
   describe('recommendations', () => {
-    describe('generic', () => {
+    describe('predefined', () => {
       it('should throw validation Error if "slot" param is not provided', () => {
         const sdk = initSdk();
 
         const errorRegex = /"slot" param is required/;
 
-        expect(() => (sdk as any).recommendations('generic')).toThrow(errorRegex);
-        expect(() => (sdk as any).recommendations('generic', {})).toThrow(errorRegex);
+        expect(() => (sdk as any).recommendations('predefined')).toThrow(errorRegex);
+        expect(() => (sdk as any).recommendations('predefined', {})).toThrow(errorRegex);
       });
 
       it('should send request to "/recommend/{slot}" endpoint', (done) => {
@@ -263,7 +263,7 @@ describe('FindifySDK', () => {
 
         const sdk = initSdk();
 
-        sdk.recommendations('generic', {
+        sdk.recommendations('predefined', {
           slot: 'test',
         });
       });
@@ -285,7 +285,7 @@ describe('FindifySDK', () => {
 
         const sdk = initSdk();
 
-        sdk.recommendations('generic', request);
+        sdk.recommendations('predefined', request);
       });
     });
 

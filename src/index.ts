@@ -50,7 +50,7 @@ class SDK {
     const slot = request ? (request as FindifySDK.GenericRecommendationsRequest).slot : undefined;
     const itemId = request ? (request as ViewedOrBought).item_id : undefined;
 
-    if (type === 'generic' && (!request || typeof slot === 'undefined')) {
+    if (type === 'predefined' && (!request || typeof slot === 'undefined')) {
       throw new Error('"slot" param is required');
     }
 
@@ -58,7 +58,7 @@ class SDK {
       throw new Error('"item_id" param is required');
     }
 
-    if (type === 'generic') {
+    if (type === 'predefined') {
       const omittedRequest = omit(request, ['slot']);
       return requestApi(`/recommend/${slot}`, omittedRequest, this.config);
     }

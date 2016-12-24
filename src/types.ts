@@ -64,7 +64,7 @@ export AutocompleteSuggestion = {
 }
 
 type RecommendationsType = (
-  'generic' |
+  'predefined' |
   'newest' |
   'trending' |
   'featured' |
