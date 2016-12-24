@@ -180,10 +180,7 @@ describe('FindifySDK', () => {
       const sdk = new FindifySDK({
         key,
         method: 'post',
-        user: {
-          uid: 'testUserId',
-          sid: 'testSessionId',
-        },
+        user,
       });
 
       const errorRegex = /"slot" param is required/;
@@ -251,6 +248,68 @@ describe('FindifySDK', () => {
 
       expect(() => (sdk as any).autocomplete()).toThrow(errorRegex);
       expect(() => (sdk as any).autocomplete({})).toThrow(errorRegex);
+    });
+  });
+
+  describe('feedback', () => {
+    it('should throw validation Error if "event" param is not provided', () => {
+      const sdk = new FindifySDK({
+        key,
+        method: 'post',
+        user: {
+          uid: 'testUserId',
+          sid: 'testSessionId',
+        },
+      });
+
+      const errorRegex = /"event" param is required/;
+
+      expect(() => (sdk as any).feedback()).toThrow(errorRegex);
+      expect(() => (sdk as any).feedback({})).toThrow(errorRegex);
+    });
+
+    it('should send request to /feedback endpoint', (done) => {
+      fauxJax.on('request', (req) => {
+        expect(req.requestURL.indexOf('/feedback') > -1).toBe(true);
+        done();
+      });
+
+      const sdk = new FindifySDK({
+        key,
+        method: 'post',
+        user,
+      });
+
+      sdk.feedback({
+        event: 'test',
+      });
+    });
+
+    it('should add passed request params to request body', (done) => {
+      const request = {
+        event: 'test',
+        properties: {
+          key: 'value',
+        }
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
+
+        expect(requestBody).toEqual(assign({}, {
+          user,
+        }, request));
+
+        done();
+      });
+
+      const sdk = new FindifySDK({
+        key,
+        method: 'post',
+        user,
+      });
+
+      sdk.feedback(request);
     });
   });
 });

@@ -1,45 +1,11 @@
 import * as assign from 'lodash/assign';
-import * as every from 'lodash/every';
 import * as omit from 'lodash/omit';
 
-import { requestApi, Config as RequestApiConfig } from './utils/requestApi';
+import { requestApi } from './modules/requestApi';
+import { requestResults } from './modules/requestResults';
 
 class SDK {
   private config: FindifySDK.Config;
-  private requestApiConfig: RequestApiConfig;
-
-  private makeExtendedRequest(request: Request) {
-    const extendedRequest = assign({}, {
-      user: this.config.user,
-      log: this.config.log,
-      t_client: (new Date()).getTime(),
-    }, request);
-
-    const { user } = extendedRequest;
-
-    if (typeof user === 'undefined') {
-      throw new Error('`user` param should be provided at request or at library config');
-    }
-
-    if (typeof user.uid === 'undefined') {
-      throw new Error('"user.uid" param is required');
-    }
-
-    if (typeof user.sid === 'undefined') {
-      throw new Error('"user.sid" param is required');
-    }
-
-    return extendedRequest;
-  }
-
-  private makeRequestApiConfig() {
-    return {
-      host: 'https://api-v3.findify.io',
-      jsonpCallbackPrefix: 'findifyCallback',
-      method: this.config.method || 'jsonp',
-      key: this.config.key,
-    };
-  }
 
   public constructor(config: FindifySDK.Config) {
     if (!config || typeof config.key === 'undefined') {
@@ -47,7 +13,6 @@ class SDK {
     }
 
     this.config = config;
-    this.requestApiConfig = this.makeRequestApiConfig();
   }
 
   public autocomplete(request: FindifySDK.AutocompleteRequest) {
@@ -55,9 +20,7 @@ class SDK {
       throw new Error('"q" param is required');
     }
 
-    const extendedRequest = this.makeExtendedRequest(request);
-
-    return requestApi('/autocomplete', extendedRequest, this.requestApiConfig);
+    return requestApi('/autocomplete', request, this.config);
   }
 
   public search(request: FindifySDK.SearchRequest) {
@@ -65,27 +28,7 @@ class SDK {
       throw new Error('"q" param is required');
     }
 
-    const { filters, sort } = request;
-
-    if (filters && !everyKey(filters, 'name')) {
-      throw new Error('"filters.name" param is required');
-    }
-
-    if (filters && !everyKey(filters, 'type')) {
-      throw new Error('"filters.type" param is required');
-    }
-
-    if (sort && !everyKey(sort, 'field')) {
-      throw new Error('"sort.field" param is required');
-    }
-
-    if (sort && !everyKey(sort, 'order')) {
-      throw new Error('"sort.order" param is required');
-    }
-
-    const extendedRequest = this.makeExtendedRequest(request);
-
-    return requestApi('/search', extendedRequest, this.requestApiConfig);
+    return requestResults('/search', request, this.config);
   }
 
   public collection(request: FindifySDK.CollectionRequest) {
@@ -93,45 +36,27 @@ class SDK {
       throw new Error('"slot" param is required');
     }
 
-    const { filters, sort } = request;
+    const omittedRequest = omit(request, ['slot']);
 
-    if (filters && !everyKey(filters, 'name')) {
-      throw new Error('"filters.name" param is required');
+    return requestResults(`/collection/${request.slot}`, omittedRequest, this.config);
+  }
+
+  // use describe for each type
+  // test base flow with sending t_client, user etc
+  // test validation by type, type => request
+  // test that we will sending request to proper endpoint(and with proper body), ex. provided `generic` recommendations type, => send to generic endpoint with corresponding body(at least two tests)
+
+  public recommendations(type: FindifySDK.RecommendationsType, request: FindifySDK.RecommendationsRequest) {
+
+  }
+
+  public feedback(request: FindifySDK.FeedbackRequest) {
+    if (!request || typeof request.event === 'undefined') {
+      throw new Error('"event" param is required');
     }
 
-    if (filters && !everyKey(filters, 'type')) {
-      throw new Error('"filters.type" param is required');
-    }
-
-    if (sort && !everyKey(sort, 'field')) {
-      throw new Error('"sort.field" param is required');
-    }
-
-    if (sort && !everyKey(sort, 'order')) {
-      throw new Error('"sort.order" param is required');
-    }
-
-    const extendedRequest = this.makeExtendedRequest(request);
-    const emittedRequest = omit(extendedRequest, ['slot']);
-
-    return requestApi(`/collection/${request.slot}`, emittedRequest, this.requestApiConfig);
+    return requestApi('/feedback', request, this.config);
   }
 }
-
-function everyKey(collection, key) {
-  return every(collection, (item) => typeof item[key] !== 'undefined');
-}
-
-type ExtendedRequest<Request> = Request & {
-  user: FindifySDK.User,
-  t_client: number,
-  log?: boolean,
-};
-
-type Request = (
-  FindifySDK.AutocompleteRequest |
-  FindifySDK.SearchRequest |
-  FindifySDK.CollectionRequest
-);
 
 export default SDK;
