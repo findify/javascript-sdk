@@ -13,7 +13,7 @@ describe('requestApi', () => {
   const user = {
     uid: 'testUserId',
     sid: 'testSessionId',
-  }
+  };
 
   beforeEach(() => {
     fauxJax.install();
@@ -264,17 +264,13 @@ describe('requestApi', () => {
 
   describe('extendRequest', () => {
     const q = 'test';
-    const user = {
-      uid: 'testUserId',
-      sid: 'testSessionId',
-    }
 
     it('should add props from "request" to result', () => {
       const requestData = {
         someProp: 'test2',
         otherProp: 'test3',
         q,
-      }
+      };
 
       const extendedRequest = extendRequest(requestData, {
         user,
@@ -319,7 +315,9 @@ describe('requestApi', () => {
     });
 
     it('should throw an Error if "user" prop is not provided neither at "configData" nor at "request"', () => {
-      expect(() => extendRequest({ q }, { key })).toThrow(/`user` param should be provided either at request or at library config/);
+      expect(() => extendRequest({
+        q,
+      }, { key })).toThrow(/`user` param should be provided either at request or at library config/);
     });
 
     it('should throw an Error if "user.uid" prop is not provided at "request"', () => {

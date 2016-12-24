@@ -227,7 +227,7 @@ describe('FindifySDK', () => {
         event: 'test',
         properties: {
           key: 'value',
-        }
+        },
       };
 
       fauxJax.on('request', (req) => {
