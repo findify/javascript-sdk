@@ -11,6 +11,9 @@ const user = {
   sid: 'testSessionId',
 };
 
+// remove `post` method after corresponding feature implementation.
+// create `initSdk` function and use it for all generic sdk instantiations;
+
 describe('FindifySDK', () => {
   beforeEach(() => {
     fauxJax.install();
@@ -310,6 +313,298 @@ describe('FindifySDK', () => {
       });
 
       sdk.feedback(request);
+    });
+  });
+
+  describe('recommendations', () => {
+    describe('generic', () => {
+      it('should throw validation Error if "slot" param is not provided', () => {
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        const errorRegex = /"slot" param is required/;
+
+        expect(() => (sdk as any).recommendations('generic')).toThrow(errorRegex);
+        expect(() => (sdk as any).recommendations('generic', {})).toThrow(errorRegex);
+      });
+
+      it('should send request to "/recommend/{slot}" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/test') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('generic', {
+          slot: 'test',
+        });
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const slot = 'test';
+        const item_id = 1;
+        const request = {
+          slot,
+          item_id,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain({ item_id }).toNotContain({ slot });
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('generic', request);
+      });
+    });
+
+    describe('newest', () => {
+      it('should send request to "/recommend/items/newest" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/newest') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('newest');
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const request = {
+          offest: 5,
+          limit: 10,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain(request);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('newest', request);
+      });
+    });
+
+    describe('trending', () => {
+      it('should send request to "/recommend/items/trending" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/trending') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('trending');
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const request = {
+          offest: 5,
+          limit: 10,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain(request);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('trending', request);
+      });
+    });
+
+    describe('featured', () => {
+      it('should send request to "/recommend/items/featured" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/featured') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('featured');
+      });
+    });
+
+    describe('latest', () => {
+      it('should send request to "/recommend/items/viewed/latest" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/latest') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('latest');
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const request = {
+          offest: 5,
+          limit: 10,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain(request);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('latest', request);
+      });
+    });
+
+    describe('viewed', () => {
+      it('should send request to "/recommend/items/{item_id}/viewed/viewed" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/1/viewed/viewed') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('viewed', {
+          item_id: 1,
+        });
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const item_id = 1;
+        const request = {
+          item_id,
+          offest: 5,
+          limit: 10,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_id'])).toNotContain({ item_id });
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('viewed', request);
+      });
+
+      it('should throw validation Error if "item_id" param is not provided', () => {
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        const errorRegex = /"item_id" param is required/;
+
+        expect(() => (sdk as any).recommendations('viewed')).toThrow(errorRegex);
+        expect(() => (sdk as any).recommendations('viewed', {})).toThrow(errorRegex);
+      });
+    });
+
+    describe('bought', () => {
+      it('should send request to "/recommend/items/{item_id}/viewed/bought" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/1/viewed/bought') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('bought', {
+          item_id: 1,
+        });
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const item_id = 1;
+        const request = {
+          item_id,
+          offest: 5,
+          limit: 10,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_id'])).toNotContain({ item_id });
+          done();
+        });
+
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        sdk.recommendations('bought', request);
+      });
+
+      it('should throw validation Error if "item_id" param is not provided', () => {
+        const sdk = new FindifySDK({
+          key,
+          method: 'post',
+          user,
+        });
+
+        const errorRegex = /"item_id" param is required/;
+
+        expect(() => (sdk as any).recommendations('bought')).toThrow(errorRegex);
+        expect(() => (sdk as any).recommendations('bought', {})).toThrow(errorRegex);
+      });
     });
   });
 });
