@@ -3,6 +3,7 @@ import { extendRequest } from '../../src/modules/extendRequest';
 
 describe('extendRequest', () => {
   const q = 'test';
+  const key = 'testApiKey';
   const user = {
     uid: 'testUserId',
     sid: 'testSessionId',
@@ -17,6 +18,7 @@ describe('extendRequest', () => {
 
     const extendedRequest = extendRequest(requestData, {
       user,
+      key,
     });
 
     expect(extendedRequest).toInclude(requestData);
@@ -27,6 +29,7 @@ describe('extendRequest', () => {
       q,
       user,
     }, {
+      key,
       log: true,
     })).toInclude({
       log: true,
@@ -34,11 +37,11 @@ describe('extendRequest', () => {
   });
 
   it('should add "user" from "configData" to result', () => {
-    expect(extendRequest({ q }, { user })).toInclude({ user });
+    expect(extendRequest({ q }, { key, user })).toInclude({ user });
   });
 
   it('should add "user" from "request" to result', () => {
-    expect(extendRequest({ q, user })).toInclude({ user });
+    expect(extendRequest({ q, user }, { key })).toInclude({ user });
   });
 
   it('should overwrite "user" from "configData" if another is provided at "request"', () => {
@@ -47,16 +50,16 @@ describe('extendRequest', () => {
       sid: 'testSessionId2',
     };
 
-    expect(extendRequest({ q, user }, { user: user2 })).toInclude({ user }).toExclude({ user: user2 });
+    expect(extendRequest({ q, user }, { key, user: user2 })).toInclude({ user }).toExclude({ user: user2 });
   });
 
   it('should add "t_client" prop to result with current timestamp', () => {
-    const extendedRequest = extendRequest({ q, user });
+    const extendedRequest = extendRequest({ q, user }, { key });
     expect(extendedRequest.t_client).toBeA('number');
   });
 
   it('should throw an Error if "user" prop is not provided neither at "configData" nor at "request"', () => {
-    expect(() => extendRequest({ q })).toThrow(/`user` param should be provided either at request or at library config/);
+    expect(() => extendRequest({ q }, { key })).toThrow(/`user` param should be provided either at request or at library config/);
   });
 
   it('should throw an Error if "user.uid" prop is not provided at "request"', () => {
@@ -65,7 +68,7 @@ describe('extendRequest', () => {
       user: {
         sid: 'testSessionId',
       } as any,
-    })).toThrow(/"user.uid" param is required/);
+    }, { key })).toThrow(/"user.uid" param is required/);
   });
 
   it('should throw an Error if "user.sid" prop is not provided at "request"', () => {
@@ -74,7 +77,7 @@ describe('extendRequest', () => {
       user: {
         uid: 'testUserId',
       } as any,
-    })).toThrow(/"user.sid" param is required/);
+    }, { key })).toThrow(/"user.sid" param is required/);
   });
 
   it('should throw an Error if "user.uid" prop is not provided at "configData"', () => {
@@ -82,6 +85,7 @@ describe('extendRequest', () => {
       user: {
         sid: 'testSessionId',
       } as any,
+      key,
     })).toThrow(/"user.uid" param is required/);
   });
 
@@ -90,6 +94,7 @@ describe('extendRequest', () => {
       user: {
         uid: 'testUserId',
       } as any,
+      key,
     })).toThrow(/"user.sid" param is required/);
   });
 });

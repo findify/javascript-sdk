@@ -1,7 +1,10 @@
 import * as assign from 'lodash/assign';
 
-function extendRequest(request: Request, configData?: ConfigData): ExtendedRequest<Request> {
-  const extendedRequest = assign({}, configData, request, {
+function extendRequest(request: Request, config: FindifySDK.Config): ExtendedRequest<Request> {
+  const extendedRequest = assign({}, {
+    user: config.user,
+    log: config.log,
+  }, request, {
     t_client: (new Date()).getTime(),
   });
 
@@ -35,12 +38,6 @@ type Request = (
   FindifySDK.RecommendationsRequest
 );
 
-type ConfigData = {
-  user?: FindifySDK.User,
-  log?: boolean,
-};
-
 export {
   extendRequest,
-  ConfigData,
 }
