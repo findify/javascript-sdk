@@ -17,7 +17,7 @@ import {
   FeedbackRequest,
 } from './types';
 
-class FindifySDK {
+class FindifySDK implements FindifySDKInterface {
   private config: Config;
 
   public constructor(config: Config) {
@@ -107,6 +107,14 @@ class FindifySDK {
 
     return requestApi('/feedback', request, this.config);
   }
+}
+
+interface FindifySDKInterface {
+  autocomplete(request: AutocompleteRequest);
+  search(request: SearchRequest);
+  collection(request: CollectionRequest);
+  recommendations(request: RecommendationsRequest);
+  feedback(request: FeedbackRequest);
 }
 
 export default FindifySDK;
