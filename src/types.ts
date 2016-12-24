@@ -1,3 +1,10 @@
+type Config = {
+  key: string,
+  user?: User,
+  method?: 'post' | 'jsonp',
+  log?: boolean,
+};
+
 type User = {
   uid: string,
   sid: string,
@@ -153,6 +160,15 @@ type ViewedRecommendationsRequest = CommonRecommendationsRequestBody & {
 type BoughtRecommendationsRequest = CommonRecommendationsRequestBody & {
   item_id: string | number,
 };
+
+type RecommendationsRequest = (
+  PredefinedRecommendationsRequest |
+  NewestRecommendationsRequest |
+  TrendingRecommendationsRequest |
+  LatestRecommendationsRequest |
+  ViewedRecommendationsRequest |
+  BoughtRecommendationsRequest
+);
 
 type AutocompleteResponse = {
   suggestions: AutocompleteSuggestion[],
