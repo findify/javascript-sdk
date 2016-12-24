@@ -13,7 +13,7 @@ import { joinParams } from '../utils/joinParams';
 // test browwsers specific code in browserstack or something else
 // we should reject same errors not depending on request type
 
-function requestApi(endpoint: string, requestData: RequestData, config: FindifySDK.Config) {
+function requestApi(endpoint: string, request: FindifySDK.Request, config: FindifySDK.Config) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
   const settings = makeSettings(config);
 
@@ -21,8 +21,9 @@ function requestApi(endpoint: string, requestData: RequestData, config: FindifyS
     throw new Error('jsonp method is not allowed in node environment');
   }
 
-  const requestDataWithKey = assign({}, requestData, { key: settings.key });
-  const queryStringParams = qs.stringify(requestDataWithKey);
+  const extendedRequest = extendRequest(request, config);
+  const extendedRequestWithKey = assign({}, extendedRequest, { key: settings.key });
+  const queryStringParams = qs.stringify(extendedRequestWithKey);
   const url = resolveUrl(settings.host, endpoint);
 
   if (settings.method === 'post' || countBytesInString(queryStringParams) > 4096) {
@@ -30,7 +31,7 @@ function requestApi(endpoint: string, requestData: RequestData, config: FindifyS
       axios({
         url,
         method: 'POST',
-        data: requestData,
+        data: extendedRequest,
         headers: {
           'x-key': settings.key,
           'Content-type': 'application/json',
