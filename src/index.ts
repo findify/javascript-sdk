@@ -39,15 +39,10 @@ class SDK {
     // make separation between public api types(index.d.ts) and internal types(types.d.ts)
     // create SearchRequestBody etc internal types.
     // use internal types in index.d.ts
-
-    // or use `as` instead
     const omittedRequest = omit(request, ['slot']);
 
     return requestResults(`/collection/${request.slot}`, omittedRequest, this.config);
   }
-
-  // test validation by type, type => request
-  // test that we will sending request to proper endpoint(and with proper body), ex. provided `generic` recommendations type, => send to generic endpoint with corresponding body(at least two tests)
 
   public recommendations(type: FindifySDK.RecommendationsType, request?: FindifySDK.RecommendationsRequest) {
     type ViewedOrBought = FindifySDK.ViewedRecommendationsRequest | FindifySDK.BoughtRecommendationsRequest;
