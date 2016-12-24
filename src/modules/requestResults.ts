@@ -2,7 +2,7 @@ import * as every from 'lodash/every';
 
 import { requestApi } from './requestApi';
 
-function requestResults(endpoint: string, request: FindifySDK.ResultsRequest, config: FindifySDK.Config) {
+function requestResults(endpoint: string, request: Request, config: FindifySDK.Config) {
   const { filters, sort } = request;
 
   if (filters && !everyKey(filters, 'name')) {
@@ -27,6 +27,8 @@ function requestResults(endpoint: string, request: FindifySDK.ResultsRequest, co
 function everyKey(c, key) {
   return every(c, (item) => typeof item[key] !== 'undefined');
 }
+
+type Request = FindifySDK.ResultsRequest & any;
 
 export {
   requestResults,
