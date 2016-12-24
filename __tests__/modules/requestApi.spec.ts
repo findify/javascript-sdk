@@ -5,7 +5,7 @@ import * as url from 'url';
 import { toPlainObject } from 'lodash';
 import { setupJsDom, teardownJsDom } from '../jsdom-helper';
 
-import { requestApi } from '../../src/utils/requestApi';
+import { requestApi } from '../../src/modules/requestApi';
 
 describe('request', () => {
   const host = 'http://test-host.com';

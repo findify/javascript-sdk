@@ -1,4 +1,4 @@
-import { Config } from '../utils/requestApi';
+import { Config } from '../modules/requestApi';
 
 function buildRequestApiConfig({
   method,

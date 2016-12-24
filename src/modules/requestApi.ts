@@ -5,9 +5,9 @@ import * as Promise from 'bluebird';
 import * as assign from 'lodash/assign';
 import * as toPlainObject from 'lodash/toPlainObject';
 
-import { resolveUrl } from './resolveUrl';
-import { countBytesInString } from './countBytesInString';
-import { joinParams } from './joinParams';
+import { resolveUrl } from '../utils/resolveUrl';
+import { countBytesInString } from '../utils/countBytesInString';
+import { joinParams } from '../utils/joinParams';
 
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
