@@ -42,4 +42,5 @@ type ConfigData = {
 
 export {
   extendRequest,
+  ConfigData,
 }
