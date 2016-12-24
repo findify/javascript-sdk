@@ -1,5 +1,4 @@
 import * as every from 'lodash/every';
-import * as curry from 'lodash/curry';
 
 import { extendRequest } from './extendRequest';
 import { requestApi } from './requestApi';
@@ -25,7 +24,7 @@ function requestResults(endpoint: string, request: FindifySDK.ResultsRequest, co
 
   const extendedRequest = extendRequest(request, config);
 
-  return curry(requestApi)(endpoint, extendedRequest);
+  return requestApi(endpoint, extendedRequest, config);
 }
 
 function everyKey(c, key) {
