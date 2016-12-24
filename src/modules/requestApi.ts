@@ -96,10 +96,6 @@ type ExtendedRequest<Request> = Request & {
   log?: boolean,
 };
 
-type RequestData = {
-  [key: string]: any,
-};
-
 type Settings = {
   key: string,
   host: string,
