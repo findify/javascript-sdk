@@ -8,7 +8,6 @@ import { setupJsDom, teardownJsDom } from '../jsdom-helper';
 import { requestApi } from '../../src/modules/requestApi';
 
 describe('request', () => {
-  const host = 'http://test-host.com';
   const path = '/test-path';
   const key = 'testApiKey';
 
@@ -23,7 +22,7 @@ describe('request', () => {
   describe('jsonp method in browser', () => {
     const requestData = { value: 'testValue' };
     const method = 'jsonp';
-    const makeRequestApi = () => requestApi(path, requestData, { key, host, method });
+    const makeRequestApi = () => requestApi(path, requestData, { key });
     const getQueryParams = (link: string) => qs.parse(url.parse(link).query);
 
     beforeEach((done) => {
@@ -48,18 +47,6 @@ describe('request', () => {
         const queryParams = getQueryParams(req.requestURL);
 
         expect(queryParams.key).toBe(key);
-
-        done();
-      });
-
-      makeRequestApi();
-    });
-
-    it('should send request to url, according to given host and path', (done) => {
-      fauxJax.on('request', (req) => {
-        const { protocol, hostname, pathname } = url.parse(req.requestURL);
-
-        expect(url.resolve(protocol + '//' + hostname, pathname)).toBe(url.resolve(host, path));
 
         done();
       });
@@ -99,20 +86,6 @@ describe('request', () => {
         })
         .catch(done);
     });
-
-    it('should set custom callback prefix if it is provided', (done) => {
-      const jsonpCallbackPrefix = 'testPrefix';
-
-      fauxJax.on('request', (req) => {
-        const { callback } = getQueryParams(req.requestURL);
-
-        expect(callback.indexOf(jsonpCallbackPrefix) >= 0).toBeTruthy();
-
-        done();
-      });
-
-      requestApi(path, requestData, { key, jsonpCallbackPrefix, host, method });
-    });
   });
 
   describe('jsonp method in node', () => {
@@ -122,7 +95,6 @@ describe('request', () => {
 
       expect(() => requestApi(path, requestData, {
         key,
-        host,
         method,
       })).toThrow(/jsonp method is not allowed in node environment/);
     });
@@ -147,7 +119,7 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { key, host, method });
+      requestApi(path, requestData, { key, method });
     });
 
     it('should use POST when { method: "post" } option is provided', (done) => {
@@ -160,14 +132,14 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, requestData, { key, host, method });
+      requestApi(path, requestData, { key, method });
     });
   });
 
   describe('post method in node', () => {
     const requestData = { value: 'testValue' };
     const method = 'post';
-    const makeRequestApi = () => requestApi(path, requestData, { key, host, method });
+    const makeRequestApi = () => requestApi(path, requestData, { key, method });
 
     it('should use POST in node environment when { method: "post" } is provided', (done) => {
       fauxJax.on('request', (req) => {
@@ -175,21 +147,12 @@ describe('request', () => {
         done();
       });
 
-      requestApi(path, {}, { key, host, method });
+      requestApi(path, {}, { key, method });
     });
 
     it('should send `x-key` param in request headers', (done) => {
       fauxJax.on('request', (req) => {
         expect(req.requestHeaders['x-key']).toBe(key);
-        done();
-      });
-
-      makeRequestApi();
-    });
-
-    it('should send request to url, according to given host and path', (done) => {
-      fauxJax.on('request', (req) => {
-        expect(req.requestURL).toBe(host + path);
         done();
       });
 
