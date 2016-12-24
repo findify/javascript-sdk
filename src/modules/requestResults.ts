@@ -1,6 +1,5 @@
 import * as every from 'lodash/every';
 
-import { extendRequest } from './extendRequest';
 import { requestApi } from './requestApi';
 
 function requestResults(endpoint: string, request: FindifySDK.ResultsRequest, config: FindifySDK.Config) {
@@ -22,9 +21,7 @@ function requestResults(endpoint: string, request: FindifySDK.ResultsRequest, co
     throw new Error('"sort.order" param is required');
   }
 
-  const extendedRequest = extendRequest(request, config);
-
-  return requestApi(endpoint, extendedRequest, config);
+  return requestApi(endpoint, request, config);
 }
 
 function everyKey(c, key) {
