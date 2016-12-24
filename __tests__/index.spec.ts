@@ -5,14 +5,13 @@ import * as omit from 'lodash/omit';
 
 import FindifySDK from '../src/index';
 
-const key = 'testApiKey';
-const user = {
-  uid: 'testUserId',
-  sid: 'testSessionId',
-};
-
-// remove `post` method after corresponding feature implementation.
-// create `initSdk` function and use it for all generic sdk instantiations;
+const initSdk = () => new FindifySDK({
+  key: 'testApiKey',
+  user: {
+    uid: 'testUserId',
+    sid: 'testSessionId',
+  },
+});
 
 describe('FindifySDK', () => {
   beforeEach(() => {
@@ -25,9 +24,7 @@ describe('FindifySDK', () => {
 
   describe('generic', () => {
     it('should be instantiated', () => {
-      const sdk = new FindifySDK({
-        key: 'testApiKey',
-      });
+      const sdk = initSdk();
     });
 
     it('should throw validation error if "key" param is not provided', () => {
@@ -59,18 +56,12 @@ describe('FindifySDK', () => {
       fauxJax.on('request', (req) => {
         const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
 
-        expect(requestBody).toEqual(assign({}, {
-          user,
-        }, request));
+        expect(requestBody).toContain(request);
 
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.search(request);
     });
@@ -81,11 +72,7 @@ describe('FindifySDK', () => {
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.search({
         q: 'test',
@@ -93,14 +80,7 @@ describe('FindifySDK', () => {
     });
 
     it('should throw validation Error if "q" param is not provided', () => {
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user: {
-          uid: 'testUserId',
-          sid: 'testSessionId',
-        },
-      });
+      const sdk = initSdk();
 
       const errorRegex = /"q" param is required/;
 
@@ -127,18 +107,12 @@ describe('FindifySDK', () => {
       fauxJax.on('request', (req) => {
         const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
 
-        expect(requestBody).toEqual(assign({}, {
-          user,
-        }, request));
+        expect(requestBody).toContain(request);
 
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.collection(assign({}, request, {
         slot: 'test',
@@ -151,11 +125,7 @@ describe('FindifySDK', () => {
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.collection({
         slot: 'test',
@@ -168,11 +138,7 @@ describe('FindifySDK', () => {
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        user,
-        method: 'post',
-      });
+      const sdk = initSdk();
 
       sdk.collection({
         slot: 'test_slot',
@@ -180,11 +146,7 @@ describe('FindifySDK', () => {
     });
 
     it('should throw validation Error if "slot" param is not provided', () => {
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       const errorRegex = /"slot" param is required/;
 
@@ -204,18 +166,12 @@ describe('FindifySDK', () => {
       fauxJax.on('request', (req) => {
         const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
 
-        expect(requestBody).toEqual(assign({}, {
-          user,
-        }, request));
+        expect(requestBody).toContain(request);
 
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.autocomplete(request);
     });
@@ -226,11 +182,7 @@ describe('FindifySDK', () => {
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.autocomplete({
         q: 'test',
@@ -238,14 +190,7 @@ describe('FindifySDK', () => {
     });
 
     it('should throw validation Error if "q" param is not provided', () => {
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user: {
-          uid: 'testUserId',
-          sid: 'testSessionId',
-        },
-      });
+      const sdk = initSdk();
 
       const errorRegex = /"q" param is required/;
 
@@ -256,14 +201,7 @@ describe('FindifySDK', () => {
 
   describe('feedback', () => {
     it('should throw validation Error if "event" param is not provided', () => {
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user: {
-          uid: 'testUserId',
-          sid: 'testSessionId',
-        },
-      });
+      const sdk = initSdk();
 
       const errorRegex = /"event" param is required/;
 
@@ -277,11 +215,7 @@ describe('FindifySDK', () => {
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.feedback({
         event: 'test',
@@ -299,18 +233,12 @@ describe('FindifySDK', () => {
       fauxJax.on('request', (req) => {
         const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
 
-        expect(requestBody).toEqual(assign({}, {
-          user,
-        }, request));
+        expect(requestBody).toContain(request);
 
         done();
       });
 
-      const sdk = new FindifySDK({
-        key,
-        method: 'post',
-        user,
-      });
+      const sdk = initSdk();
 
       sdk.feedback(request);
     });
@@ -319,11 +247,7 @@ describe('FindifySDK', () => {
   describe('recommendations', () => {
     describe('generic', () => {
       it('should throw validation Error if "slot" param is not provided', () => {
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         const errorRegex = /"slot" param is required/;
 
@@ -337,11 +261,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('generic', {
           slot: 'test',
@@ -361,11 +281,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('generic', request);
       });
@@ -378,11 +294,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('newest');
       });
@@ -398,11 +310,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('newest', request);
       });
@@ -415,11 +323,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('trending');
       });
@@ -435,11 +339,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('trending', request);
       });
@@ -452,11 +352,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('featured');
       });
@@ -469,11 +365,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('latest');
       });
@@ -489,11 +381,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('latest', request);
       });
@@ -506,11 +394,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('viewed', {
           item_id: 1,
@@ -530,21 +414,13 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('viewed', request);
       });
 
       it('should throw validation Error if "item_id" param is not provided', () => {
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         const errorRegex = /"item_id" param is required/;
 
@@ -560,11 +436,7 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('bought', {
           item_id: 1,
@@ -584,21 +456,13 @@ describe('FindifySDK', () => {
           done();
         });
 
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         sdk.recommendations('bought', request);
       });
 
       it('should throw validation Error if "item_id" param is not provided', () => {
-        const sdk = new FindifySDK({
-          key,
-          method: 'post',
-          user,
-        });
+        const sdk = initSdk();
 
         const errorRegex = /"item_id" param is required/;
 
