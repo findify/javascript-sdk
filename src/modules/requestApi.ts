@@ -9,12 +9,19 @@ import { resolveUrl } from '../utils/resolveUrl';
 import { countBytesInString } from '../utils/countBytesInString';
 import { joinParams } from '../utils/joinParams';
 
+import {
+  Config,
+  User,
+  RequestBody,
+} from '../types';
+
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
 // we should reject same errors not depending on request type
 
-// node should have post by default. write test for both envs
-function requestApi(endpoint: string, request: FindifySDK.Request, config: FindifySDK.Config) {
+// implement error handling. lib should return object with Error type, { message: string }
+// request param could be optional?
+function requestApi(endpoint: string, requestBody: RequestBody, config: Config) {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
 
   const settings = makeSettings(config);
@@ -23,7 +30,7 @@ function requestApi(endpoint: string, request: FindifySDK.Request, config: Findi
     throw new Error('jsonp method is not allowed in node environment');
   }
 
-  const extendedRequest = extendRequest(request, config);
+  const extendedRequest = extendRequest(requestBody, config);
   const extendedRequestWithKey = assign({}, extendedRequest, { key: settings.key });
   const queryStringParams = qs.stringify(extendedRequestWithKey);
   const url = resolveUrl(settings.host, endpoint);
@@ -58,11 +65,11 @@ function requestApi(endpoint: string, request: FindifySDK.Request, config: Findi
   }
 }
 
-function extendRequest(request: FindifySDK.Request, config: FindifySDK.Config): ExtendedRequest<FindifySDK.Request> {
+function extendRequest(requestBody: RequestBody, config: Config): ExtendedRequestBody<RequestBody> {
   const extendedRequest = assign({}, {
     user: config.user,
     log: config.log,
-  }, request, {
+  }, requestBody, {
     t_client: (new Date()).getTime(),
   });
 
@@ -83,7 +90,7 @@ function extendRequest(request: FindifySDK.Request, config: FindifySDK.Config): 
   return extendedRequest as any;
 }
 
-function makeSettings(config: FindifySDK.Config): Settings {
+function makeSettings(config: Config): Settings {
   const env = typeof window === 'undefined' ? 'node' : 'browser';
 
   return {
@@ -94,8 +101,8 @@ function makeSettings(config: FindifySDK.Config): Settings {
   };
 }
 
-type ExtendedRequest<Request> = Request & {
-  user: FindifySDK.User,
+type ExtendedRequestBody<R> = R & {
+  user: User,
   t_client: number,
   log?: boolean,
 };

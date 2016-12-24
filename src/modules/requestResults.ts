@@ -2,8 +2,18 @@ import * as every from 'lodash/every';
 
 import { requestApi } from './requestApi';
 
-function requestResults(endpoint: string, request: Request, config: FindifySDK.Config) {
-  const { filters, sort } = request;
+import {
+  Config,
+  SearchRequestBody,
+  CollectionRequestBody,
+} from '../types';
+
+function requestResults(
+  endpoint: string,
+  requestBody: SearchRequestBody | CollectionRequestBody,
+  config: Config
+) {
+  const { filters, sort } = requestBody;
 
   if (filters && !everyKey(filters, 'name')) {
     throw new Error('"filters.name" param is required');
@@ -21,14 +31,12 @@ function requestResults(endpoint: string, request: Request, config: FindifySDK.C
     throw new Error('"sort.order" param is required');
   }
 
-  return requestApi(endpoint, request, config);
+  return requestApi(endpoint, requestBody, config);
 }
 
 function everyKey(c, key) {
   return every(c, (item) => typeof item[key] !== 'undefined');
 }
-
-type Request = FindifySDK.ResultsRequest & any;
 
 export {
   requestResults,

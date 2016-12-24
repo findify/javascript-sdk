@@ -7,7 +7,6 @@
   },
   "files": [
     "./modules.d.ts",
-    "./index.d.ts",
     "./src/index.ts"
   ]
 }

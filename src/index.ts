@@ -4,10 +4,23 @@ import * as omit from 'lodash/omit';
 import { requestApi } from './modules/requestApi';
 import { requestResults } from './modules/requestResults';
 
-class SDK {
-  private config: FindifySDK.Config;
+import {
+  Config,
+  RecommendationsType,
+  AutocompleteRequest,
+  SearchRequest,
+  CollectionRequest,
+  RecommendationsRequest,
+  PredefinedRecommendationsRequest,
+  ViewedRecommendationsRequest,
+  BoughtRecommendationsRequest,
+  FeedbackRequest,
+} from './types';
 
-  public constructor(config: FindifySDK.Config) {
+class FindifySDK {
+  private config: Config;
+
+  public constructor(config: Config) {
     if (!config || typeof config.key === 'undefined') {
       throw new Error('"key" param is required');
     }
@@ -15,7 +28,7 @@ class SDK {
     this.config = config;
   }
 
-  public autocomplete(request: FindifySDK.AutocompleteRequest) {
+  public autocomplete(request: AutocompleteRequest) {
     if (!request || typeof request.q === 'undefined') {
       throw new Error('"q" param is required');
     }
@@ -23,7 +36,7 @@ class SDK {
     return requestApi('/autocomplete', request, this.config);
   }
 
-  public search(request: FindifySDK.SearchRequest) {
+  public search(request: SearchRequest) {
     if (!request || typeof request.q === 'undefined') {
       throw new Error('"q" param is required');
     }
@@ -31,23 +44,20 @@ class SDK {
     return requestResults('/search', request, this.config);
   }
 
-  public collection(request: FindifySDK.CollectionRequest) {
+  public collection(request: CollectionRequest) {
     if (!request || typeof request.slot === 'undefined') {
       throw new Error('"slot" param is required');
     }
 
-    // make separation between public api types(index.d.ts) and internal types(types.d.ts)
-    // create SearchRequestBody etc internal types.
-    // use internal types in index.d.ts
     const omittedRequest = omit(request, ['slot']);
 
     return requestResults(`/collection/${request.slot}`, omittedRequest, this.config);
   }
 
-  public recommendations(type: FindifySDK.RecommendationsType, request?: FindifySDK.RecommendationsRequest) {
-    type ViewedOrBought = FindifySDK.ViewedRecommendationsRequest | FindifySDK.BoughtRecommendationsRequest;
+  public recommendations(type: RecommendationsType, request?: RecommendationsRequest) {
+    type ViewedOrBought = ViewedRecommendationsRequest | BoughtRecommendationsRequest;
 
-    const slot = request ? (request as FindifySDK.GenericRecommendationsRequest).slot : undefined;
+    const slot = request ? (request as PredefinedRecommendationsRequest).slot : undefined;
     const itemId = request ? (request as ViewedOrBought).item_id : undefined;
 
     if (type === 'predefined' && (!request || typeof slot === 'undefined')) {
@@ -90,7 +100,7 @@ class SDK {
     }
   }
 
-  public feedback(request: FindifySDK.FeedbackRequest) {
+  public feedback(request: FeedbackRequest) {
     if (!request || typeof request.event === 'undefined') {
       throw new Error('"event" param is required');
     }
@@ -99,4 +109,4 @@ class SDK {
   }
 }
 
-export default SDK;
+export default FindifySDK;

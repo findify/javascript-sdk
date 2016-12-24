@@ -88,6 +88,12 @@ type ResultsRequestBody = {
   limit?: number,
 }
 
+type SearchRequestBody = ResultsRequestBody & {
+  q: string,
+}
+
+type CollectionRequestBody = ResultsRequestBody
+
 type FeedbackRequestBody = {
   event: string,
   properties?: {
@@ -122,7 +128,7 @@ type SearchRequest = SearchRequestBody & {
   q: string,
 }
 
-type CollectionRequest = SearchRequestBody & {
+type CollectionRequest = CollectionRequestBody & {
   slot: string,
 }
 
@@ -187,4 +193,22 @@ type RecommendationsResponse = {
     user_id?: string,
   },
   items: Product[],
+}
+
+export {
+  Config,
+  User,
+  RecommendationsType,
+  AutocompleteRequest,
+  SearchRequest,
+  CollectionRequest,
+  RecommendationsRequest,
+  PredefinedRecommendationsRequest,
+  ViewedRecommendationsRequest,
+  BoughtRecommendationsRequest,
+  FeedbackRequest,
+  RequestBody,
+  SearchRequestBody,
+  CollectionRequestBody,
+  ResultsRequestBody,
 }
