@@ -55,7 +55,32 @@ function requestApi(endpoint: string, requestData: RequestData, config: FindifyS
   }
 }
 
-export function makeSettings(config: FindifySDK.Config): Settings {
+function extendRequest(request: FindifySDK.Request, config: FindifySDK.Config): ExtendedRequest<FindifySDK.Request> {
+  const extendedRequest = assign({}, {
+    user: config.user,
+    log: config.log,
+  }, request, {
+    t_client: (new Date()).getTime(),
+  });
+
+  const { user } = extendedRequest;
+
+  if (typeof user === 'undefined') {
+    throw new Error('`user` param should be provided either at request or at library config');
+  }
+
+  if (typeof user.uid === 'undefined') {
+    throw new Error('"user.uid" param is required');
+  }
+
+  if (typeof user.sid === 'undefined') {
+    throw new Error('"user.sid" param is required');
+  }
+
+  return extendedRequest as any;
+}
+
+function makeSettings(config: FindifySDK.Config): Settings {
   return {
     host: 'https://api-v3.findify.io',
     jsonpCallbackPrefix: 'findifyCallback',
@@ -63,6 +88,12 @@ export function makeSettings(config: FindifySDK.Config): Settings {
     key: config.key,
   };
 }
+
+type ExtendedRequest<Request> = Request & {
+  user: FindifySDK.User,
+  t_client: number,
+  log?: boolean,
+};
 
 type RequestData = {
   [key: string]: any,
@@ -77,4 +108,6 @@ type Settings = {
 
 export {
   requestApi,
+  makeSettings,
+  extendRequest,
 }
