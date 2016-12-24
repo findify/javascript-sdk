@@ -3,6 +3,7 @@
   "rules": {
     "quotemark": "single",
     "object-literal-sort-keys": false,
-    "ordered-imports": false
+    "ordered-imports": false,
+    "interface-name": false
   }
 }

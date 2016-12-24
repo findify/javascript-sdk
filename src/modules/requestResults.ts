@@ -8,11 +8,7 @@ import {
   CollectionRequestBody,
 } from '../types';
 
-function requestResults(
-  endpoint: string,
-  requestBody: SearchRequestBody | CollectionRequestBody,
-  config: Config
-) {
+function requestResults(endpoint: string, requestBody: SearchRequestBody | CollectionRequestBody, config: Config) {
   const { filters, sort } = requestBody;
 
   if (filters && !everyKey(filters, 'name')) {

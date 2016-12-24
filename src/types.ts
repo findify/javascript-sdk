@@ -5,45 +5,47 @@ type User = {
   ip?: string,
   ua?: string,
   lang?: string[],
-}
+};
 
 type Filter = {
   name: string,
   type: string,
-  values?: {
-    value?: string,
-    from?: string,
-    to?: string,
-  }[],
-}
+  values?: FilterValue[],
+};
+
+type FilterValue = {
+  value?: string,
+  from?: string,
+  to?: string,
+};
 
 type Sort = {
   field: string,
   order: string,
-}
+};
 
 type Redirect = {
   name: string,
   url: string,
-}
+};
 
 type Banner = {
   products: {
     image_url: string,
     target_url: string,
   },
-}
+};
 
 type Product = {
   id: string,
-}
+};
 
 type Facet = {
   name: string,
   type: string,
   sort_type: string,
   values: FacetValue[],
-}
+};
 
 type FacetValue = {
   selected: boolean,
@@ -56,12 +58,12 @@ type FacetValue = {
   from: number,
   to: number,
   children: FacetValue[],
-}
+};
 
-export AutocompleteSuggestion = {
+type AutocompleteSuggestion = {
   value: string,
   redirect: Redirect,
-}
+};
 
 type RecommendationsType = (
   'predefined' |
@@ -70,7 +72,7 @@ type RecommendationsType = (
   'featured' |
   'latest' |
   'viewed' |
-  'bought' 
+  'bought'
 );
 
 type AutocompleteRequestBody = {
@@ -78,7 +80,7 @@ type AutocompleteRequestBody = {
   user?: User,
   suggestion_limit?: number,
   item_limit?: number,
-}
+};
 
 type ResultsRequestBody = {
   user?: User,
@@ -86,34 +88,34 @@ type ResultsRequestBody = {
   sort?: Sort[],
   offset?: number,
   limit?: number,
-}
+};
 
 type SearchRequestBody = ResultsRequestBody & {
   q: string,
-}
+};
 
-type CollectionRequestBody = ResultsRequestBody
+type CollectionRequestBody = ResultsRequestBody;
 
 type FeedbackRequestBody = {
   event: string,
   properties?: {
     [key: string]: any,
   },
-}
+};
 
 type PredefinedRecommendationsRequestBody = {
   item_id?: number | string,
-}
+};
 
 type CommonRecommendationsRequestBody = {
   offset?: number,
   limit?: number,
-}
+};
 
-type RecommendationsRequestBody = {
+type RecommendationsRequestBody = (
   PredefinedRecommendationsRequestBody |
   CommonRecommendationsRequestBody
-}
+);
 
 type RequestBody = (
   AutocompleteRequestBody |
@@ -126,17 +128,17 @@ type AutocompleteRequest = AutocompleteRequestBody;
 
 type SearchRequest = SearchRequestBody & {
   q: string,
-}
+};
 
 type CollectionRequest = CollectionRequestBody & {
   slot: string,
-}
+};
 
 type FeedbackRequest = FeedbackRequestBody;
 
 type PredefinedRecommendationsRequest = PredefinedRecommendationsRequestBody & {
   slot: string,
-}
+};
 
 type NewestRecommendationsRequest = CommonRecommendationsRequestBody;
 
@@ -146,11 +148,11 @@ type LatestRecommendationsRequest = CommonRecommendationsRequestBody;
 
 type ViewedRecommendationsRequest = CommonRecommendationsRequestBody & {
   item_id: string | number,
-}
+};
 
 type BoughtRecommendationsRequest = CommonRecommendationsRequestBody & {
   item_id: string | number,
-}
+};
 
 type AutocompleteResponse = {
   suggestions: AutocompleteSuggestion[],
@@ -161,7 +163,7 @@ type AutocompleteResponse = {
     suggestion_limit: number,
     item_limit: number,
   },
-}
+};
 
 type ResultsResponse = {
   meta: {
@@ -174,14 +176,14 @@ type ResultsResponse = {
   },
   items: Product[],
   facets: Facet[],
-}
+};
 
 type SearchResponse = ResultsResponse & {
   redirect: Redirect,
   banner: Banner,
-}
+};
 
-type CollectionResponse = ResultsResponse
+type CollectionResponse = ResultsResponse;
 
 type RecommendationsResponse = {
   meta: {
@@ -193,7 +195,7 @@ type RecommendationsResponse = {
     user_id?: string,
   },
   items: Product[],
-}
+};
 
 export {
   Config,
