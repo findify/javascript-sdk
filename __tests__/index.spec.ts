@@ -270,14 +270,16 @@ describe('FindifySDK', () => {
 
       it('should send provided request data as request body', (done) => {
         const slot = 'test';
-        const item_id = 1;
+        const itemId = 1;
         const request = {
           slot,
-          item_id,
+          item_id: itemId,
         };
 
         fauxJax.on('request', (req) => {
-          expect(JSON.parse(req.requestBody)).toContain({ item_id }).toNotContain({ slot });
+          expect(JSON.parse(req.requestBody)).toContain({
+            item_id: itemId,
+          }).toNotContain({ slot });
           done();
         });
 
@@ -402,15 +404,17 @@ describe('FindifySDK', () => {
       });
 
       it('should send provided request data as request body', (done) => {
-        const item_id = 1;
+        const itemId = 1;
         const request = {
-          item_id,
+          item_id: itemId,
           offest: 5,
           limit: 10,
         };
 
         fauxJax.on('request', (req) => {
-          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_id'])).toNotContain({ item_id });
+          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_id'])).toNotContain({
+            item_id: itemId,
+          });
           done();
         });
 
@@ -444,15 +448,17 @@ describe('FindifySDK', () => {
       });
 
       it('should send provided request data as request body', (done) => {
-        const item_id = 1;
+        const itemId = 1;
         const request = {
-          item_id,
+          item_id: itemId,
           offest: 5,
           limit: 10,
         };
 
         fauxJax.on('request', (req) => {
-          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_id'])).toNotContain({ item_id });
+          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_id'])).toNotContain({
+            item_id: itemId,
+          });
           done();
         });
 

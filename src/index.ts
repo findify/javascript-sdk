@@ -48,13 +48,13 @@ class SDK {
     type ViewedOrBought = FindifySDK.ViewedRecommendationsRequest | FindifySDK.BoughtRecommendationsRequest;
 
     const slot = request ? (request as FindifySDK.GenericRecommendationsRequest).slot : undefined;
-    const item_id = request ? (request as ViewedOrBought).item_id : undefined;
+    const itemId = request ? (request as ViewedOrBought).item_id : undefined;
 
     if (type === 'generic' && (!request || typeof slot === 'undefined')) {
       throw new Error('"slot" param is required');
     }
 
-    if ((type === 'viewed' || type === 'bought') && (!request || typeof item_id === 'undefined')) {
+    if ((type === 'viewed' || type === 'bought') && (!request || typeof itemId === 'undefined')) {
       throw new Error('"item_id" param is required');
     }
 
@@ -65,12 +65,12 @@ class SDK {
 
     if (type === 'viewed') {
       const omittedRequest = omit(request, ['item_id']);
-      return requestApi(`/recommend/items/${item_id}/viewed/viewed`, omittedRequest, this.config);
+      return requestApi(`/recommend/items/${itemId}/viewed/viewed`, omittedRequest, this.config);
     }
 
     if (type === 'bought') {
       const omittedRequest = omit(request, ['item_id']);
-      return requestApi(`/recommend/items/${item_id}/viewed/bought`, omittedRequest, this.config);
+      return requestApi(`/recommend/items/${itemId}/viewed/bought`, omittedRequest, this.config);
     }
 
     if (type === 'featured') {
