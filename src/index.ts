@@ -116,7 +116,7 @@ type Client = {
   collection(request: CollectionRequest): Promise<CollectionResponse>,
   recommendations(type: RecommendationsType, request?: RecommendationsRequest): Promise<RecommendationsResponse>,
   feedback(request: FeedbackRequest): Promise<void>,
-}
+};
 
 export {
   init,
