@@ -26,6 +26,7 @@ function requestApi(endpoint: string, requestBody: RequestBody, config: Config) 
 
   const settings = makeSettings(config);
 
+  // should be in `makeSettings` function
   if (env === 'node' && settings.method === 'jsonp') {
     throw new Error('jsonp method is not allowed in node environment');
   }
