@@ -229,4 +229,8 @@ export {
   SearchRequestBody,
   CollectionRequestBody,
   ResultsRequestBody,
+  AutocompleteResponse,
+  SearchResponse,
+  CollectionResponse,
+  RecommendationsResponse,
 }

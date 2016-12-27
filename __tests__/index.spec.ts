@@ -3,9 +3,9 @@ import * as expect from 'expect';
 import * as assign from 'lodash/assign';
 import * as omit from 'lodash/omit';
 
-import FindifySDK from '../src/index';
+import * as FindifySDK from '../src/index';
 
-const initSdk = () => new FindifySDK({
+const initSdk = () => FindifySDK.init({
   key: 'testApiKey',
   user: {
     uid: 'testUserId',
@@ -28,12 +28,12 @@ describe('FindifySDK', () => {
     });
 
     it('should throw validation error if "key" param is not provided', () => {
-      expect(() => new (FindifySDK as any)()).toThrow(/"key" param is required/);
-      expect(() => new (FindifySDK as any)({})).toThrow(/"key" param is required/);
+      expect(() => (FindifySDK as any).init()).toThrow(/"key" param is required/);
+      expect(() => (FindifySDK as any).init()({})).toThrow(/"key" param is required/);
     });
 
     // it('should throw validation error if "key" param is not string', () => {
-    //   expect(() => new FindifySDK({ key: 1 })).toThrow(/"key" param should be a string/);
+    //   expect(() => FindifySDK.init({ key: 1 })).toThrow(/"key" param should be a string/);
     // });
   });
 
