@@ -1,33 +1,35 @@
+import * as Types from './src/types';
+import * as FindifySDK from './src';
+
 declare namespace __FindifySDK {
-  type Config = {
-    key: string,
-    user?: User,
-    method?: 'post' | 'jsonp',
-    log?: boolean,
-  };
+  type RecommendationsType = Types.RecommendationsType;
 
-  type User = {
-    uid: string,
-    sid: string,
-    email?: string,
-    ip?: string,
-    ua?: string,
-    lang?: string[],
-  };
+  type AutocompleteRequest = Types.AutocompleteRequest;
+  type SearchRequest = Types.SearchRequest;
+  type CollectionRequest = Types.CollectionRequest;
+  type RecommendationsRequest = Types.RecommendationsRequest;
+  type FeedbackRequest = Types.FeedbackRequest;
 
-  type Product = {
-    id: string,
-  };
+  type AutocompleteResponse = Types.AutocompleteResponse;
+  type SearchResponse = Types.SearchResponse;
+  type CollectionResponse = Types.CollectionResponse;
+  type RecommendationsResponse = Types.RecommendationsResponse;
 
-  type AutocompleteSuggestion = {
-    value: string,
-    redirect: Redirect,
-  };
+  type Client = FindifySDK.Client;
+  type Config = Types.Config;
+  type User = Types.User;
 
-  type Redirect = {
-    name: string,
-    url: string,
-  };
+  type Product = Types.Product;
+  type AutocompleteSuggestion = Types.AutocompleteSuggestion;
+  type Redirect = Types.Redirect;
+  type Filter = Types.Filter;
+  type FilterValue = Types.FilterValue;
+  type Facet = Types.Facet;
+  type FacetValue = Types.FacetValue;
+  type Sort = Types.Sort;
+  type Banner = Types.Banner;
+
+  function init(config: Config): Client;
 }
 
 declare module "findify-sdk" {
