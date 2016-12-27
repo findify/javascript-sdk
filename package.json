@@ -1,6 +1,6 @@
 {
   "name": "findify-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Findify search api client",
   "main": "lib/index.js",
   "author": "1ven",
