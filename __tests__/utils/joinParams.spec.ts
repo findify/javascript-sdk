@@ -1,7 +1,7 @@
 import * as expect from 'expect';
 import { joinParams } from '../../src/utils/joinParams';
 
-describe('resolveUrl', () => {
+describe('joinParams', () => {
   const assertionsData = [{
     args: ['http://site.com/test', 'hello=world'],
     expectingValue: 'http://site.com/test?hello=world',
