@@ -233,4 +233,13 @@ export {
   SearchResponse,
   CollectionResponse,
   RecommendationsResponse,
+  Product,
+  AutocompleteSuggestion,
+  Redirect,
+  Filter,
+  FilterValue,
+  Facet,
+  FacetValue,
+  Banner,
+  Sort,
 }

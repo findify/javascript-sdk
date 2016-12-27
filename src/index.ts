@@ -120,4 +120,5 @@ type Client = {
 
 export {
   init,
+  Client,
 };
