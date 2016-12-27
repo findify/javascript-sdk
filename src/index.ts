@@ -1,3 +1,4 @@
+import * as Promise from 'bluebird';
 import * as assign from 'lodash/assign';
 import * as omit from 'lodash/omit';
 
@@ -15,106 +16,108 @@ import {
   ViewedRecommendationsRequest,
   BoughtRecommendationsRequest,
   FeedbackRequest,
+  AutocompleteResponse,
+  SearchResponse,
+  CollectionResponse,
+  RecommendationsResponse,
 } from './types';
 
-class FindifySDK implements FindifySDKInterface {
-  private config: Config;
-
-  public constructor(config: Config) {
-    if (!config || typeof config.key === 'undefined') {
-      throw new Error('"key" param is required');
-    }
-
-    this.config = config;
+function init(config: Config) {
+  if (!config || typeof config.key === 'undefined') {
+    throw new Error('"key" param is required');
   }
 
-  public autocomplete(request: AutocompleteRequest) {
-    if (!request || typeof request.q === 'undefined') {
-      throw new Error('"q" param is required');
-    }
+  return {
+    autocomplete(request: AutocompleteRequest) {
+      if (!request || typeof request.q === 'undefined') {
+        throw new Error('"q" param is required');
+      }
 
-    return requestApi('/autocomplete', request, this.config);
-  }
+      return requestApi('/autocomplete', request, config);
+    },
 
-  public search(request: SearchRequest) {
-    if (!request || typeof request.q === 'undefined') {
-      throw new Error('"q" param is required');
-    }
+    search(request: SearchRequest) {
+      if (!request || typeof request.q === 'undefined') {
+        throw new Error('"q" param is required');
+      }
 
-    return requestResults('/search', request, this.config);
-  }
+      return requestResults('/search', request, config);
+    },
 
-  public collection(request: CollectionRequest) {
-    if (!request || typeof request.slot === 'undefined') {
-      throw new Error('"slot" param is required');
-    }
+    collection(request: CollectionRequest) {
+      if (!request || typeof request.slot === 'undefined') {
+        throw new Error('"slot" param is required');
+      }
 
-    const omittedRequest = omit(request, ['slot']);
-
-    return requestResults(`/collection/${request.slot}`, omittedRequest, this.config);
-  }
-
-  public recommendations(type: RecommendationsType, request?: RecommendationsRequest) {
-    type ViewedOrBought = ViewedRecommendationsRequest | BoughtRecommendationsRequest;
-
-    const slot = request ? (request as PredefinedRecommendationsRequest).slot : undefined;
-    const itemId = request ? (request as ViewedOrBought).item_id : undefined;
-
-    if (type === 'predefined' && (!request || typeof slot === 'undefined')) {
-      throw new Error('"slot" param is required');
-    }
-
-    if ((type === 'viewed' || type === 'bought') && (!request || typeof itemId === 'undefined')) {
-      throw new Error('"item_id" param is required');
-    }
-
-    if (type === 'predefined') {
       const omittedRequest = omit(request, ['slot']);
-      return requestApi(`/recommend/${slot}`, omittedRequest, this.config);
-    }
 
-    if (type === 'viewed') {
-      const omittedRequest = omit(request, ['item_id']);
-      return requestApi(`/recommend/items/${itemId}/viewed/viewed`, omittedRequest, this.config);
-    }
+      return requestResults(`/collection/${request.slot}`, omittedRequest, config);
+    },
 
-    if (type === 'bought') {
-      const omittedRequest = omit(request, ['item_id']);
-      return requestApi(`/recommend/items/${itemId}/viewed/bought`, omittedRequest, this.config);
-    }
+    recommendations(type: RecommendationsType, request?: RecommendationsRequest) {
+      type ViewedOrBought = ViewedRecommendationsRequest | BoughtRecommendationsRequest;
 
-    if (type === 'featured') {
-      return requestApi('/recommend/items/featured', {}, this.config);
-    }
+      const slot = request ? (request as PredefinedRecommendationsRequest).slot : undefined;
+      const itemId = request ? (request as ViewedOrBought).item_id : undefined;
 
-    if (type === 'newest') {
-      return requestApi('/recommend/items/newest', request, this.config);
-    }
+      if (type === 'predefined' && (!request || typeof slot === 'undefined')) {
+        throw new Error('"slot" param is required');
+      }
 
-    if (type === 'trending') {
-      return requestApi('/recommend/items/trending', request, this.config);
-    }
+      if ((type === 'viewed' || type === 'bought') && (!request || typeof itemId === 'undefined')) {
+        throw new Error('"item_id" param is required');
+      }
 
-    if (type === 'latest') {
-      return requestApi('/recommend/items/latest', request, this.config);
-    }
-  }
+      if (type === 'predefined') {
+        const omittedRequest = omit(request, ['slot']);
+        return requestApi(`/recommend/${slot}`, omittedRequest, config);
+      }
 
-  public feedback(request: FeedbackRequest) {
-    if (!request || typeof request.event === 'undefined') {
-      throw new Error('"event" param is required');
-    }
+      if (type === 'viewed') {
+        const omittedRequest = omit(request, ['item_id']);
+        return requestApi(`/recommend/items/${itemId}/viewed/viewed`, omittedRequest, config);
+      }
 
-    return requestApi('/feedback', request, this.config);
-  }
+      if (type === 'bought') {
+        const omittedRequest = omit(request, ['item_id']);
+        return requestApi(`/recommend/items/${itemId}/viewed/bought`, omittedRequest, config);
+      }
+
+      if (type === 'featured') {
+        return requestApi('/recommend/items/featured', {}, config);
+      }
+
+      if (type === 'newest') {
+        return requestApi('/recommend/items/newest', request, config);
+      }
+
+      if (type === 'trending') {
+        return requestApi('/recommend/items/trending', request, config);
+      }
+
+      if (type === 'latest') {
+        return requestApi('/recommend/items/latest', request, config);
+      }
+    },
+
+    feedback(request: FeedbackRequest) {
+      if (!request || typeof request.event === 'undefined') {
+        throw new Error('"event" param is required');
+      }
+
+      return requestApi('/feedback', request, config);
+    },
+  };
 }
 
-interface FindifySDKInterface {
-  autocomplete(request: AutocompleteRequest);
-  search(request: SearchRequest);
-  collection(request: CollectionRequest);
-  recommendations(request: RecommendationsRequest);
-  feedback(request: FeedbackRequest);
+type Client = {
+  autocomplete(request: AutocompleteRequest): Promise<AutocompleteResponse>,
+  search(request: SearchRequest): Promise<SearchResponse>,
+  collection(request: CollectionRequest): Promise<CollectionResponse>,
+  recommendations(type: RecommendationsType, request?: RecommendationsRequest): Promise<RecommendationsResponse>,
+  feedback(request: FeedbackRequest): Promise<void>,
 }
 
-export default FindifySDK;
+export {
+  init,
+};
