@@ -10,9 +10,10 @@
     "lint": "tslint --project .",
     "build": "npm run clean && tsc",
     "test": "mocha --compilers ts:ts-node/register --recursive -R min  ./__tests__",
-    "release": "npm-run-all -s test clean build lint",
-    "preversion": "npm run release && git checkout master && git merge develop",
-    "postversion": "git push && git push --tags && git checkout develop && git merge master && git push"
+    "validate": "npm-run-all -s clean test build lint clean",
+    "preversion": "npm run validate && git checkout master && git merge develop",
+    "postversion": "git push && git push --tags && git checkout develop && git merge master && git push",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@types/axios": "^0.9.34",
