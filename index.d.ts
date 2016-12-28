@@ -1,7 +1,7 @@
 import * as Types from './src/types';
 import * as FindifySDK from './src';
 
-declare namespace __FindifySDK {
+declare module "findify-sdk" {
   type RecommendationsType = Types.RecommendationsType;
 
   type AutocompleteRequest = Types.AutocompleteRequest;
@@ -30,8 +30,4 @@ declare namespace __FindifySDK {
   type Banner = Types.Banner;
 
   function init(config: Config): Client;
-}
-
-declare module "findify-sdk" {
-  export = __FindifySDK;
 }
