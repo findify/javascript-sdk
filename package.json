@@ -6,7 +6,9 @@
   "author": "1ven",
   "license": "MIT",
   "files": [
-    "lib/"
+    "lib",
+    "src",
+    "index.d.ts"
   ],
   "scripts": {
     "clean": "rimraf lib",
