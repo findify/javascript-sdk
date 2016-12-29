@@ -1,5 +1,5 @@
 {
-  "name": "findify-sdk",
+  "name": "@findify/findify-sdk",
   "version": "1.1.6",
   "description": "Findify search api client",
   "main": "lib/index.js",
@@ -8,10 +8,11 @@
   "scripts": {
     "clean": "rimraf lib",
     "lint": "tslint --project .",
-    "build": "npm run clean && tsc",
+    "build": "tsc --project .",
     "test": "mocha --compilers ts:ts-node/register --recursive -R min  ./__tests__",
-    "validate": "npm-run-all -s test build lint",
-    "preversion": "npm run validate && git checkout master && git merge develop",
+    "check": "npm-run test && npm run build && npm run lint && npm run clean",
+    "prepublish": "npm run build",
+    "preversion": "npm run check && git checkout master && git merge develop",
     "postversion": "git push && git push --tags && git checkout develop && git merge master && git push"
   },
   "dependencies": {
