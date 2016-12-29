@@ -5,6 +5,9 @@
   "main": "lib/index.js",
   "author": "1ven",
   "license": "MIT",
+  "files": [
+    "lib/"
+  ],
   "scripts": {
     "clean": "rimraf lib",
     "lint": "tslint --project .",
@@ -12,6 +15,7 @@
     "test": "mocha --compilers ts:ts-node/register --recursive -R min  ./__tests__",
     "check": "npm run test && npm run build && npm run lint && npm run clean",
     "prepublish": "npm run build",
+    "postpublish": "npm run clean",
     "preversion": "npm run check && git checkout master && git merge develop",
     "postversion": "git push && git push --tags && git checkout develop && git merge master && git push && npm publish"
   },
