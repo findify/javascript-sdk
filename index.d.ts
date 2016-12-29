@@ -1,7 +1,7 @@
 import * as Types from './src/types';
 import * as FindifySDK from './src';
 
-declare module "findify-sdk" {
+declare module "@findify/findify-sdk" {
   type RecommendationsType = Types.RecommendationsType;
 
   type AutocompleteRequest = Types.AutocompleteRequest;
