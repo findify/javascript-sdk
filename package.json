@@ -12,7 +12,8 @@
     "test": "mocha --compilers ts:ts-node/register --recursive -R min  ./__tests__",
     "validate": "npm-run-all -s test build lint clean",
     "preversion": "npm run validate && git checkout master && git merge develop",
-    "postversion": "git push && git push --tags && git checkout develop && git merge master && git push"
+    "postversion": "git push && git push --tags && git checkout develop && git merge master && git push",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@types/axios": "^0.9.34",
