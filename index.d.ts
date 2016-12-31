@@ -1,33 +1,198 @@
-import * as Types from './src/types';
-import * as FindifySDK from './src';
+import * as Promise from 'bluebird';
 
 declare module "@findify/findify-sdk" {
-  type RecommendationsType = Types.RecommendationsType;
+  type Client = {
+    autocomplete(request: AutocompleteRequest): Promise<AutocompleteResponse>,
+    search(request: SearchRequest): Promise<SearchResponse>,
+    collection(request: CollectionRequest): Promise<CollectionResponse>,
+    recommendations(type: RecommendationsType, request?: RecommendationsRequest): Promise<RecommendationsResponse>,
+    feedback(request: FeedbackRequest): Promise<void>,
+  };
+  type Config = {
+    key: string,
+    user?: User,
+    method?: 'post' | 'jsonp',
+    log?: boolean,
+  };
+  type User = {
+    uid: string,
+    sid: string,
+    email?: string,
+    ip?: string,
+    ua?: string,
+    lang?: string[],
+  };
 
-  type AutocompleteRequest = Types.AutocompleteRequest;
-  type SearchRequest = Types.SearchRequest;
-  type CollectionRequest = Types.CollectionRequest;
-  type RecommendationsRequest = Types.RecommendationsRequest;
-  type FeedbackRequest = Types.FeedbackRequest;
+  type RecommendationsType = (
+    'predefined' |
+    'newest' |
+    'trending' |
+    'featured' |
+    'latest' |
+    'viewed' |
+    'bought'
+  );
 
-  type AutocompleteResponse = Types.AutocompleteResponse;
-  type SearchResponse = Types.SearchResponse;
-  type CollectionResponse = Types.CollectionResponse;
-  type RecommendationsResponse = Types.RecommendationsResponse;
+  type AutocompleteRequest = {
+    q: string,
+    user?: User,
+    suggestion_limit?: number,
+    item_limit?: number,
+  };
+  type SearchRequest = {
+    q: string,
+    user?: User,
+    filters?: Filter[],
+    sort?: Sort[],
+    offset?: number,
+    limit?: number,
+  };
+  type CollectionRequest = {
+    slot: string,
+    user?: User,
+    filters?: Filter[],
+    sort?: Sort[],
+    offset?: number,
+    limit?: number,
+  };
+  type PredefinedRecommendationsRequest = {
+    slot: string,
+    item_id?: number | string,
+  };
+  type NewestRecommendationsRequest = {
+    offset?: number,
+    limit?: number,
+  };
+  type TrendingRecommendationsRequest = {
+    offset?: number,
+    limit?: number,
+  };
+  type LatestRecommendationsRequest = {
+    offset?: number,
+    limit?: number,
+  };
+  type ViewedRecommendationsRequest = {
+    item_id: string | number,
+    offset?: number,
+    limit?: number,
+  };
+  type BoughtRecommendationsRequest = {
+    item_id: string | number,
+    offset?: number,
+    limit?: number,
+  };
+  type RecommendationsRequest = (
+    PredefinedRecommendationsRequest |
+    NewestRecommendationsRequest |
+    TrendingRecommendationsRequest |
+    LatestRecommendationsRequest |
+    ViewedRecommendationsRequest |
+    BoughtRecommendationsRequest
+  );
+  type FeedbackRequest = {
+    event: string,
+    properties?: {
+      [key: string]: any,
+    },
+  };
 
-  type Client = FindifySDK.Client;
-  type Config = Types.Config;
-  type User = Types.User;
+  type AutocompleteResponse = {
+    suggestions: AutocompleteSuggestion[],
+    items: Product[],
+    meta: {
+      rid: string,
+      q: string,
+      suggestion_limit: number,
+      item_limit: number,
+    },
+  };
+  type SearchResponse = {
+    redirect: Redirect,
+    banner: Banner,
+    meta: {
+      rid: string,
+      filters: Filter[],
+      sort: Sort[],
+      limit: number,
+      offset: number,
+      total: number,
+    },
+    items: Product[],
+    facets: Facet[],
+  };
+  type CollectionResponse = {
+    meta: {
+      rid: string,
+      filters: Filter[],
+      sort: Sort[],
+      limit: number,
+      offset: number,
+      total: number,
+    },
+    items: Product[],
+    facets: Facet[],
+  };
+  type RecommendationsResponse = {
+    meta: {
+      rid: string,
+      limit: number,
+      offset: number,
+      total: number,
+      item_id?: string,
+      user_id?: string,
+    },
+    items: Product[],
+  };
 
-  type Product = Types.Product;
-  type AutocompleteSuggestion = Types.AutocompleteSuggestion;
-  type Redirect = Types.Redirect;
-  type Filter = Types.Filter;
-  type FilterValue = Types.FilterValue;
-  type Facet = Types.Facet;
-  type FacetValue = Types.FacetValue;
-  type Sort = Types.Sort;
-  type Banner = Types.Banner;
+  type Product = {
+    id: string,
+  };
+  type AutocompleteSuggestion = {
+    value: string,
+    redirect: Redirect,
+  };
+  type Redirect = {
+    name: string,
+    url: string,
+  };
+  type Filter = {
+    name: string,
+    type: string,
+    values?: FilterValue[],
+  };
+  type FilterValue = {
+    value?: string,
+    from?: string,
+    to?: string,
+  };
+  type Facet = {
+    name: string,
+    type: string,
+    sort_type: string,
+    values: FacetValue[],
+  };
+  type FacetValue = {
+    selected: boolean,
+    value: string,
+    count: number,
+    name: string,
+    has_children: boolean,
+    min: number,
+    max: number,
+    from: number,
+    to: number,
+    children: FacetValue[],
+  };
+  type Sort = {
+    field: string,
+    order: string,
+  };
+  type Banner = {
+    products: {
+      image_url: string,
+      target_url: string,
+    },
+  };
 
   function init(config: Config): Client;
 }
