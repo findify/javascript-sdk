@@ -98,7 +98,7 @@ declare module "@findify/findify-sdk" {
 
   type AutocompleteResponse = {
     suggestions: AutocompleteSuggestion[],
-    items: Product[],
+    items: AutocompleteProduct[],
     meta: {
       rid: string,
       q: string,
@@ -117,7 +117,7 @@ declare module "@findify/findify-sdk" {
       offset: number,
       total: number,
     },
-    items: Product[],
+    items: ResultsProduct[],
     facets: Facet[],
   };
   type CollectionResponse = {
@@ -129,7 +129,7 @@ declare module "@findify/findify-sdk" {
       offset: number,
       total: number,
     },
-    items: Product[],
+    items: ResultsProduct[],
     facets: Facet[],
   };
   type RecommendationsResponse = {
@@ -141,10 +141,27 @@ declare module "@findify/findify-sdk" {
       item_id?: string,
       user_id?: string,
     },
-    items: Product[],
+    items: RecommendationsProduct[],
   };
 
-  type Product = {
+  type AutocompleteProduct = {
+    id: string,
+    title: string,
+    compare_at: number,
+    price: number[],
+    product_url: string,
+    thumbnail_url: string,
+    stickers?: {
+      discount: boolean,
+      'free-shipping': boolean,
+      'in-stock': boolean,
+      'out-of-stock': boolean,
+    },
+  };
+  type ResultsProduct = {
+    id: string,
+  };
+  type RecommendationsProduct = {
     id: string,
   };
   type AutocompleteSuggestion = {
