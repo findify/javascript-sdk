@@ -1,1 +1,1 @@
-module.exports = require('./' + process.env.FINDIFY_ENV || 'staging');
+module.exports = require('./' + (process.env.FINDIFY_ENV || 'staging'));
