@@ -15,7 +15,7 @@ import {
   RequestBody,
 } from '../types';
 
-const env = require('../../env');
+import env = require('../../env');
 
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
