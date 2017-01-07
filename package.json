@@ -11,7 +11,7 @@
     "index.d.ts"
   ],
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rimraf lib dist",
     "lint": "tslint --project .",
     "check": "npm run test && npm run build && npm run lint && npm run clean",
     "test": "cross-env FINDIFY_ENV=staging mocha --compilers ts:ts-node/register --recursive -R min  ./__tests__",
