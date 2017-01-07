@@ -15,6 +15,8 @@ import {
   RequestBody,
 } from '../types';
 
+const env = require('../../env');
+
 // retry couple of times on failure request
 // test browwsers specific code in browserstack or something else
 // we should reject same errors not depending on request type
@@ -92,8 +94,8 @@ function makeSettings(config: Config): Settings {
   }
 
   return {
-    host: 'https://api-v3.findify.io',
-    jsonpCallbackPrefix: 'findifyCallback',
+    host: env.searchApi.url,
+    jsonpCallbackPrefix: env.searchApi.callback,
     method: config.method || (jsEnv === 'browser' ? 'jsonp' : 'post'),
     key: config.key,
   };
