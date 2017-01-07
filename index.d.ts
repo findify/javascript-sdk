@@ -144,6 +144,16 @@ declare module "@findify/findify-sdk" {
     items: RecommendationsProduct[],
   };
 
+  type ResultsProduct = {
+    id: string,
+  };
+  type RecommendationsProduct = {
+    id: string,
+  };
+  type AutocompleteSuggestion = {
+    value: string,
+    redirect: Redirect,
+  };
   type AutocompleteProduct = {
     id: string,
     title: string,
@@ -157,16 +167,6 @@ declare module "@findify/findify-sdk" {
       'in-stock': boolean,
       'out-of-stock': boolean,
     },
-  };
-  type ResultsProduct = {
-    id: string,
-  };
-  type RecommendationsProduct = {
-    id: string,
-  };
-  type AutocompleteSuggestion = {
-    value: string,
-    redirect: Redirect,
   };
   type Redirect = {
     name: string,
