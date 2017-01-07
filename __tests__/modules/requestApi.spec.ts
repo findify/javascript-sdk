@@ -102,9 +102,6 @@ describe('requestApi', () => {
       });
     });
 
-    describe('jsonp method in node', () => {
-    });
-
     describe('post method in browser', () => {
       beforeEach((done) => {
         setupJsDom(() => done());
