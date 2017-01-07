@@ -103,16 +103,6 @@ describe('requestApi', () => {
     });
 
     describe('jsonp method in node', () => {
-      it('should throw an Error when { method: "jsonp" } option is provided', () => {
-        const requestData = { value: 'testValue' };
-        const method = 'jsonp';
-
-        expect(() => requestApi(path, requestData, {
-          key,
-          method,
-          user,
-        })).toThrow(/jsonp method is not allowed in node environment/);
-      });
     });
 
     describe('post method in browser', () => {
@@ -223,6 +213,17 @@ describe('requestApi', () => {
   });
 
   describe('makeSettings', () => {
+    it('should throw an Error when { method: "jsonp" } option is provided in "config"', () => {
+      const requestData = { value: 'testValue' };
+      const method = 'jsonp';
+
+      expect(() => makeSettings({
+        key,
+        method,
+        user,
+      })).toThrow(/jsonp method is not allowed in node environment/);
+    });
+
     it('should add "host" as "https://api-v3.findify.io"', () => {
       expect(makeSettings({ key })).toContain({
         host: 'https://api-v3.findify.io',

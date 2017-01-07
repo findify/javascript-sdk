@@ -22,14 +22,7 @@ import {
 // implement error handling. lib should return object with Error type, { message: string }
 // request param could be optional?
 function requestApi(endpoint: string, requestBody: RequestBody, config: Config) {
-  const env = typeof window === 'undefined' ? 'node' : 'browser';
-
   const settings = makeSettings(config);
-
-  // should be in `makeSettings` function
-  if (env === 'node' && settings.method === 'jsonp') {
-    throw new Error('jsonp method is not allowed in node environment');
-  }
 
   const extendedRequest = extendRequest(requestBody, config);
   const extendedRequestWithKey = assign({}, extendedRequest, { key: settings.key });
@@ -92,12 +85,16 @@ function extendRequest(requestBody: RequestBody, config: Config): ExtendedReques
 }
 
 function makeSettings(config: Config): Settings {
-  const env = typeof window === 'undefined' ? 'node' : 'browser';
+  const jsEnv = typeof window === 'undefined' ? 'node' : 'browser';
+
+  if (jsEnv === 'node' && config.method === 'jsonp') {
+    throw new Error('jsonp method is not allowed in node environment');
+  }
 
   return {
     host: 'https://api-v3.findify.io',
     jsonpCallbackPrefix: 'findifyCallback',
-    method: config.method || (env === 'browser' ? 'jsonp' : 'post'),
+    method: config.method || (jsEnv === 'browser' ? 'jsonp' : 'post'),
     key: config.key,
   };
 }
