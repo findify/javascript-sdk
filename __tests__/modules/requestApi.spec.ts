@@ -2,10 +2,15 @@ import * as fauxJax from 'faux-jax';
 import * as expect from 'expect';
 import * as qs from 'qs';
 import * as url from 'url';
+import * as rewire from 'rewire';
 import { toPlainObject } from 'lodash';
 import { setupJsDom, teardownJsDom } from '../jsdom-helper';
 
-import { requestApi, makeSettings, extendRequest } from '../../src/modules/requestApi';
+const r = rewire('../../src/modules/requestApi');
+
+const requestApi = r.__get__('requestApi');
+const makeSettings = r.__get__('makeSettings');
+const extendRequest = r.__get__('extendRequest');
 
 describe('requestApi', () => {
   const path = '/test-path';
@@ -222,9 +227,13 @@ describe('requestApi', () => {
     });
 
     it('should add "host" as "https://search-staging.findify.io"', () => {
+      const restoreEnv = r.__set__('env', require('../../src/env/staging'));
+
       expect(makeSettings({ key })).toContain({
         host: 'https://search-staging.findify.io',
       });
+
+      restoreEnv();
     });
 
     it('should add "jsonpCallbackPrefix" as "findifyCallback"', () => {
