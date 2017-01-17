@@ -134,40 +134,38 @@ type RecommendationsRequestBody = (
 );
 
 type ClickSuggestionFeedbackRequestBody = {
-  rid: string,
-  suggestion: string,
+  event: 'click-suggestion',
+  properties: ClickSuggestionFeedbackRequest,
 };
 
 type ClickItemFeedbackRequestBody = {
-  item_id: string,
-  rid?: string,
+  event: 'click-item',
+  properties: ClickItemFeedbackRequest,
 };
 
 type RedirectFeedbackRequestBody = {
-  rid: string,
-  suggestion: string,
+  event: 'redirect',
+  properties: RedirectFeedbackRequest,
 };
 
 type PurchaseFeedbackRequestBody = {
-  order_id: string,
-  currency: string,
-  revenue: number,
-  line_items: LineItem[],
-  affiliation?: string,
+  event: 'purchase',
+  properties: PurchaseFeedbackRequest,
 };
 
 type UpdateCartFeedbackRequestBody = {
-  line_items: LineItem[],
+  event: 'update-cart',
+  properties: UpdateCartFeedbackRequest,
 };
 
 type AddToCartFeedbackRequestBody = {
-  item_id: string,
-  rid?: string,
-  quantity?: number,
+  event: 'add-to-cart',
+  properties: AddToCartFeedbackRequest,
 };
 
 type ViewPageFeedbackRequestBody = {
-  item_id?: string,
+  event: 'view-page',
+  properties: ViewPageFeedbackRequest,
 };
 
 type FeedbackRequestBody = (
@@ -197,7 +195,56 @@ type CollectionRequest = CollectionRequestBody & {
   slot: string,
 };
 
-type FeedbackRequest = FeedbackRequestBody;
+type ClickSuggestionFeedbackRequest = {
+  rid: string,
+  suggestion: string,
+};
+
+type ClickItemFeedbackRequest = {
+  item_id: string,
+  rid?: string,
+};
+
+type RedirectFeedbackRequest = {
+  rid: string,
+  suggestion: string,
+};
+
+type PurchaseFeedbackRequest = {
+  order_id: string,
+  currency: string,
+  revenue: number,
+  line_items: LineItem[],
+  affiliation?: string,
+};
+
+type UpdateCartFeedbackRequest = {
+  line_items: LineItem[],
+};
+
+type AddToCartFeedbackRequest = {
+  item_id: string,
+  rid?: string,
+  quantity?: number,
+};
+
+type ViewPageFeedbackRequest = {
+  url: string,
+  ref: string,
+  width: number,
+  height: number,
+  item_id?: string,
+};
+
+type FeedbackRequest = (
+  ClickSuggestionFeedbackRequest |
+  ClickItemFeedbackRequest |
+  RedirectFeedbackRequest |
+  PurchaseFeedbackRequest |
+  UpdateCartFeedbackRequest |
+  AddToCartFeedbackRequest |
+  ViewPageFeedbackRequest
+);
 
 type PredefinedRecommendationsRequest = PredefinedRecommendationsRequestBody & {
   slot: string,
