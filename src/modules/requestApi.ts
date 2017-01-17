@@ -116,6 +116,4 @@ type Settings = {
 
 export {
   requestApi,
-  makeSettings,
-  extendRequest,
 }
