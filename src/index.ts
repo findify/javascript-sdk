@@ -8,6 +8,7 @@ import { requestResults } from './modules/requestResults';
 import {
   Config,
   RecommendationsType,
+  FeedbackType,
   AutocompleteRequest,
   SearchRequest,
   CollectionRequest,
@@ -100,12 +101,82 @@ function init(config: Config) {
       }
     },
 
-    feedback(request: FeedbackRequest) {
-      if (!request || typeof request.event === 'undefined') {
-        throw new Error('"event" param is required');
+    feedback(type: FeedbackType, request) {
+      if (type === 'click-suggestion') {
+        requestApi('/feedback', {
+          event: 'click-suggestion',
+          properties: {
+            rid: request.rid,
+            suggestion: request.suggestion,
+          },
+        }, config);
       }
 
-      return requestApi('/feedback', request, config);
+      if (type === 'click-item') {
+        requestApi('/feedback', {
+          event: 'click-item',
+          properties: {
+            rid: request.rid,
+            item_id: request.item_id,
+          },
+        }, config);
+      }
+
+      if (type === 'redirect') {
+        requestApi('/feedback', {
+          event: 'redirect',
+          properties: {
+            rid: request.rid,
+            suggestion: request.suggestion,
+          },
+        }, config);
+      }
+
+      if (type === 'purchase') {
+        requestApi('/feedback', {
+          event: 'purchase',
+          properties: {
+            order_id: request.order_id,
+            currency: request.currency,
+            revenue: request.revenue,
+            line_items: request.line_items,
+            affiliation: request.affiliation,
+          },
+        }, config);
+      }
+
+      if (type === 'add-to-cart') {
+        requestApi('/feedback', {
+          event: 'add-to-cart',
+          properties: {
+            rid: request.rid,
+            item_id: request.item_id,
+            quantity: request.quantity,
+          },
+        }, config);
+      }
+
+      if (type === 'update-cart') {
+        requestApi('/feedback', {
+          event: 'update-cart',
+          properties: {
+            line_items: request.line_items,
+          },
+        }, config);
+      }
+
+      if (type === 'view-page') {
+        requestApi('/feedback', {
+          event: 'view-page',
+          properties: {
+            url: request.url,
+            ref: request.ref,
+            width: request.width,
+            height: request.height,
+            item_id: request.item_id,
+          },
+        }, config);
+      }
     },
   };
 }

@@ -49,7 +49,7 @@ describe('FindifySDK', () => {
       };
 
       fauxJax.on('request', (req) => {
-        const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
+        const requestBody = JSON.parse(req.requestBody);
 
         expect(requestBody).toContain(request);
 
@@ -91,7 +91,7 @@ describe('FindifySDK', () => {
       };
 
       fauxJax.on('request', (req) => {
-        const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
+        const requestBody = JSON.parse(req.requestBody);
 
         expect(requestBody).toContain(request);
 
@@ -141,7 +141,7 @@ describe('FindifySDK', () => {
       };
 
       fauxJax.on('request', (req) => {
-        const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
+        const requestBody = JSON.parse(req.requestBody);
 
         expect(requestBody).toContain(request);
 
@@ -176,30 +176,178 @@ describe('FindifySDK', () => {
 
       const sdk = initSdk();
 
-      sdk.feedback({
-        event: 'test',
+      sdk.feedback('click-suggestion', {
+        suggestion: 'testSuggestion',
       });
     });
 
-    it('should add passed request params to request body', (done) => {
-      const request = {
-        event: 'test',
-        properties: {
-          key: 'value',
-        },
+    it('should send "click-suggestion" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        rid: 'testRid',
+        suggestion: 'testSuggestion',
       };
 
       fauxJax.on('request', (req) => {
-        const requestBody = omit(JSON.parse(req.requestBody), ['t_client']);
+        const requestBody = JSON.parse(req.requestBody);
 
-        expect(requestBody).toContain(request);
+        expect(requestBody).toContain({
+          event: 'click-suggestion',
+          properties,
+        });
 
         done();
       });
 
-      const sdk = initSdk();
+      sdk.feedback('click-suggestion', properties);
+    });
 
-      sdk.feedback(request);
+    it('should send "click-item" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        rid: 'testRid',
+        item_id: 'testItemId',
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = JSON.parse(req.requestBody);
+
+        expect(requestBody).toContain({
+          event: 'click-item',
+          properties,
+        });
+
+        done();
+      });
+
+      sdk.feedback('click-item', properties);
+    });
+
+    it('should send "redirect" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        rid: 'testRid',
+        suggestion: 'testSuggestion',
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = JSON.parse(req.requestBody);
+
+        expect(requestBody).toContain({
+          event: 'redirect',
+          properties,
+        });
+
+        done();
+      });
+
+      sdk.feedback('redirect', properties);
+    });
+
+    it('should send "purchase" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        order_id: 'testOrderId',
+        currency: 'testCurrency',
+        revenue: 100,
+        affiliation: 'testAffiliation',
+        line_items: [{
+          item_id: 'testItemId',
+          unit_price: 100,
+          quantity: 1,
+        }, {
+          item_id: 'testItemId2',
+          unit_price: 100,
+          quantity: 1,
+        }],
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = JSON.parse(req.requestBody);
+
+        expect(requestBody).toContain({
+          event: 'purchase',
+          properties,
+        });
+
+        done();
+      });
+
+      sdk.feedback('purchase', properties);
+    });
+
+    it('should send "add-to-cart" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        item_id: 'testItemId',
+        rid: 'testRid',
+        quantity: 1,
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = JSON.parse(req.requestBody);
+
+        expect(requestBody).toContain({
+          event: 'add-to-cart',
+          properties,
+        });
+
+        done();
+      });
+
+      sdk.feedback('add-to-cart', properties);
+    });
+
+    it('should send "update-cart" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        line_items: [{
+          item_id: 'testItemId',
+          unit_price: 100,
+          quantity: 1,
+        }, {
+          item_id: 'testItemId2',
+          unit_price: 100,
+          quantity: 1,
+        }],
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = JSON.parse(req.requestBody);
+
+        expect(requestBody).toContain({
+          event: 'update-cart',
+          properties,
+        });
+
+        done();
+      });
+
+      sdk.feedback('update-cart', properties);
+    });
+
+    it('should send "view-page" event', (done) => {
+      const sdk = initSdk();
+      const properties = {
+        url: 'http://jsdom-url.com/',
+        ref: 'http://jsdom-referrer-url.com',
+        width: 1200,
+        height: 800,
+        item_id: 'testItemId',
+      };
+
+      fauxJax.on('request', (req) => {
+        const requestBody = JSON.parse(req.requestBody);
+
+        expect(requestBody).toContain({
+          event: 'view-page',
+          properties,
+        });
+
+        done();
+      });
+
+      sdk.feedback('view-page', properties);
     });
   });
 
