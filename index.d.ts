@@ -6,7 +6,7 @@ declare module "@findify/findify-sdk" {
     search(request: SearchRequest): Promise<SearchResponse>,
     collection(request: CollectionRequest): Promise<CollectionResponse>,
     recommendations(type: RecommendationsType, request?: RecommendationsRequest): Promise<RecommendationsResponse>,
-    feedback(request: FeedbackRequest): Promise<void>,
+    feedback(type: FeedbackType, request: FeedbackRequest): Promise<void>,
   };
   type Config = {
     key: string,
@@ -22,6 +22,11 @@ declare module "@findify/findify-sdk" {
     ua?: string,
     lang?: string[],
   };
+  type LineItem = {
+    item_id: string,
+    unit_price: number,
+    quantity: number,
+  };
 
   type RecommendationsType = (
     'predefined' |
@@ -31,6 +36,15 @@ declare module "@findify/findify-sdk" {
     'latest' |
     'viewed' |
     'bought'
+  );
+  type FeedbackType = (
+    'click-suggestion' |
+    'click-item' |
+    'redirect' |
+    'purchase' |
+    'add-to-cart' |
+    'update-cart' |
+    'view-page'
   );
 
   type AutocompleteRequest = {
@@ -89,12 +103,49 @@ declare module "@findify/findify-sdk" {
     ViewedRecommendationsRequest |
     BoughtRecommendationsRequest
   );
-  type FeedbackRequest = {
-    event: string,
-    properties?: {
-      [key: string]: any,
-    },
+  type ClickSuggestionFeedbackRequest = {
+    rid: string,
+    suggestion: string,
   };
+  type ClickItemFeedbackRequest = {
+    item_id: string,
+    rid?: string,
+  };
+  type RedirectFeedbackRequest = {
+    rid: string,
+    suggestion: string,
+  };
+  type PurchaseFeedbackRequest = {
+    order_id: string,
+    currency: string,
+    revenue: number,
+    affiliation?: string,
+    line_items: LineItem[],
+  };
+  type UpdateCartFeedbackRequest = {
+    line_items: LineItem[],
+  };
+  type AddToCartFeedbackRequest = {
+    item_id: string,
+    rid?: string,
+    quantity?: number,
+  };
+  type ViewPageFeedbackRequest = {
+    url: string,
+    ref: string,
+    width: number,
+    height: number,
+    item_id?: string,
+  };
+  type FeedbackRequest = (
+    ClickSuggestionFeedbackRequest |
+    ClickItemFeedbackRequest |
+    RedirectFeedbackRequest |
+    PurchaseFeedbackRequest |
+    UpdateCartFeedbackRequest |
+    AddToCartFeedbackRequest |
+    ViewPageFeedbackRequest
+  );
 
   type AutocompleteResponse = {
     suggestions: AutocompleteSuggestion[],
