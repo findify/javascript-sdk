@@ -2,6 +2,7 @@ import * as has from 'lodash/has';
 import {
   Config,
   RecommendationsType,
+  FeedbackType,
   AutocompleteRequest,
   SearchRequest,
   CollectionRequest,
@@ -43,7 +44,7 @@ function validateRecommendationsParams(type: RecommendationsType, request: Recom
   }
 }
 
-function validateFeedbackParams(type, request) {
+function validateFeedbackParams(type: FeedbackType, request) {
   if ([
     'click-suggestion',
     'click-item',

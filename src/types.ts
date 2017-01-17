@@ -54,6 +54,12 @@ type Facet = {
   values: FacetValue[],
 };
 
+type LineItem = {
+  item_id: string,
+  unit_price: number,
+  quantity: number,
+};
+
 type FacetValue = {
   selected: boolean,
   value: string,
@@ -82,6 +88,16 @@ type RecommendationsType = (
   'bought'
 );
 
+type FeedbackType = (
+  'click-suggestion' |
+  'click-item' |
+  'redirect' |
+  'purchase' |
+  'add-to-cart' |
+  'update-cart' |
+  'view-page'
+);
+
 type AutocompleteRequestBody = {
   q: string,
   user?: User,
@@ -103,13 +119,6 @@ type SearchRequestBody = ResultsRequestBody & {
 
 type CollectionRequestBody = ResultsRequestBody;
 
-type FeedbackRequestBody = {
-  event: string,
-  properties?: {
-    [key: string]: any,
-  },
-};
-
 type PredefinedRecommendationsRequestBody = {
   item_id?: number | string,
 };
@@ -122,6 +131,53 @@ type CommonRecommendationsRequestBody = {
 type RecommendationsRequestBody = (
   PredefinedRecommendationsRequestBody |
   CommonRecommendationsRequestBody
+);
+
+type ClickSuggestionFeedbackRequestBody = {
+  rid: string,
+  suggestion: string,
+};
+
+type ClickItemFeedbackRequestBody = {
+  item_id: string,
+  rid?: string,
+};
+
+type RedirectFeedbackRequestBody = {
+  rid: string,
+  suggestion: string,
+};
+
+type PurchaseFeedbackRequestBody = {
+  order_id: string,
+  currency: string,
+  revenue: number,
+  line_items: LineItem[],
+  affiliation?: string,
+};
+
+type UpdateCartFeedbackRequestBody = {
+  line_items: LineItem[],
+};
+
+type AddToCartFeedbackRequestBody = {
+  item_id: string,
+  rid?: string,
+  quantity?: number,
+};
+
+type ViewPageFeedbackRequestBody = {
+  item_id?: string,
+};
+
+type FeedbackRequestBody = (
+  ClickSuggestionFeedbackRequestBody |
+  ClickItemFeedbackRequestBody |
+  RedirectFeedbackRequestBody |
+  PurchaseFeedbackRequestBody |
+  UpdateCartFeedbackRequestBody |
+  AddToCartFeedbackRequestBody |
+  ViewPageFeedbackRequestBody
 );
 
 type RequestBody = (
@@ -217,6 +273,7 @@ export {
   Config,
   User,
   RecommendationsType,
+  FeedbackType,
   AutocompleteRequest,
   SearchRequest,
   CollectionRequest,
