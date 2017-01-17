@@ -27,11 +27,6 @@ describe('FindifySDK', () => {
       const sdk = initSdk();
     });
 
-    it('should throw validation error if "key" param is not provided', () => {
-      expect(() => (FindifySDK as any).init()).toThrow(/"key" param is required/);
-      expect(() => (FindifySDK as any).init()({})).toThrow(/"key" param is required/);
-    });
-
     // it('should throw validation error if "key" param is not string', () => {
     //   expect(() => FindifySDK.init({ key: 1 })).toThrow(/"key" param should be a string/);
     // });
@@ -77,15 +72,6 @@ describe('FindifySDK', () => {
       sdk.search({
         q: 'test',
       });
-    });
-
-    it('should throw validation Error if "q" param is not provided', () => {
-      const sdk = initSdk();
-
-      const errorRegex = /"q" param is required/;
-
-      expect(() => (sdk as any).search()).toThrow(errorRegex);
-      expect(() => (sdk as any).search({})).toThrow(errorRegex);
     });
   });
 
@@ -144,15 +130,6 @@ describe('FindifySDK', () => {
         slot: 'test_slot',
       });
     });
-
-    it('should throw validation Error if "slot" param is not provided', () => {
-      const sdk = initSdk();
-
-      const errorRegex = /"slot" param is required/;
-
-      expect(() => (sdk as any).collection()).toThrow(errorRegex);
-      expect(() => (sdk as any).collection({})).toThrow(errorRegex);
-    });
   });
 
   describe('autocomplete', () => {
@@ -188,27 +165,9 @@ describe('FindifySDK', () => {
         q: 'test',
       });
     });
-
-    it('should throw validation Error if "q" param is not provided', () => {
-      const sdk = initSdk();
-
-      const errorRegex = /"q" param is required/;
-
-      expect(() => (sdk as any).autocomplete()).toThrow(errorRegex);
-      expect(() => (sdk as any).autocomplete({})).toThrow(errorRegex);
-    });
   });
 
   describe('feedback', () => {
-    it('should throw validation Error if "event" param is not provided', () => {
-      const sdk = initSdk();
-
-      const errorRegex = /"event" param is required/;
-
-      expect(() => (sdk as any).feedback()).toThrow(errorRegex);
-      expect(() => (sdk as any).feedback({})).toThrow(errorRegex);
-    });
-
     it('should send request to /feedback endpoint', (done) => {
       fauxJax.on('request', (req) => {
         expect(req.requestURL.indexOf('/feedback') > -1).toBe(true);
@@ -246,15 +205,6 @@ describe('FindifySDK', () => {
 
   describe('recommendations', () => {
     describe('predefined', () => {
-      it('should throw validation Error if "slot" param is not provided', () => {
-        const sdk = initSdk();
-
-        const errorRegex = /"slot" param is required/;
-
-        expect(() => (sdk as any).recommendations('predefined')).toThrow(errorRegex);
-        expect(() => (sdk as any).recommendations('predefined', {})).toThrow(errorRegex);
-      });
-
       it('should send request to "/recommend/{slot}" endpoint', (done) => {
         fauxJax.on('request', (req) => {
           expect(req.requestURL.indexOf('/recommend/test') > -1).toBe(true);
@@ -422,15 +372,6 @@ describe('FindifySDK', () => {
 
         sdk.recommendations('viewed', request);
       });
-
-      it('should throw validation Error if "item_id" param is not provided', () => {
-        const sdk = initSdk();
-
-        const errorRegex = /"item_id" param is required/;
-
-        expect(() => (sdk as any).recommendations('viewed')).toThrow(errorRegex);
-        expect(() => (sdk as any).recommendations('viewed', {})).toThrow(errorRegex);
-      });
     });
 
     describe('bought', () => {
@@ -465,15 +406,6 @@ describe('FindifySDK', () => {
         const sdk = initSdk();
 
         sdk.recommendations('bought', request);
-      });
-
-      it('should throw validation Error if "item_id" param is not provided', () => {
-        const sdk = initSdk();
-
-        const errorRegex = /"item_id" param is required/;
-
-        expect(() => (sdk as any).recommendations('bought')).toThrow(errorRegex);
-        expect(() => (sdk as any).recommendations('bought', {})).toThrow(errorRegex);
       });
     });
   });
