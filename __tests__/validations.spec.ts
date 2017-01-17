@@ -241,5 +241,37 @@ describe('validations', () => {
         }],
       })).toThrow(/"line_items\[\]\.quantity" param is required/);
     });
+
+    it('should throw an Error if "url" is not provided at "view-page" event', () => {
+      expect(() => validateFeedbackParams('view-page', {
+        ref: 'testRef',
+        width: 1366,
+        height: 768,
+      })).toThrow(/"url" param is required/);
+    });
+
+    it('should throw an Error if "ref" is not provided at "view-page" event', () => {
+      expect(() => validateFeedbackParams('view-page', {
+        url: 'testUrl',
+        width: 1366,
+        height: 768,
+      })).toThrow(/"ref" param is required/);
+    });
+
+    it('should throw an Error if "width" is not provided at "view-page" event', () => {
+      expect(() => validateFeedbackParams('view-page', {
+        url: 'testUrl',
+        ref: 'testRef',
+        height: 768,
+      })).toThrow(/"width" param is required/);
+    });
+
+    it('should throw an Error if "height" is not provided at "view-page" event', () => {
+      expect(() => validateFeedbackParams('view-page', {
+        url: 'testUrl',
+        ref: 'testRef',
+        width: 1366,
+      })).toThrow(/"height" param is required/);
+    });
   });
 });

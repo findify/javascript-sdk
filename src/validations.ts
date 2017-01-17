@@ -132,6 +132,24 @@ function validateFeedbackParams(type: FeedbackType, request) {
       throw new Error('"line_items[].quantity" param is required');
     }
   }
+
+  if (type === 'view-page') {
+    if (!has(request, 'url')) {
+      throw new Error('"url" param is required');
+    }
+
+    if (!has(request, 'ref')) {
+      throw new Error('"ref" param is required');
+    }
+
+    if (!has(request, 'width')) {
+      throw new Error('"width" param is required');
+    }
+
+    if (!has(request, 'height')) {
+      throw new Error('"height" param is required');
+    }
+  }
 }
 
 export {
