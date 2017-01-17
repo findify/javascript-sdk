@@ -177,6 +177,7 @@ describe('FindifySDK', () => {
       const sdk = initSdk();
 
       sdk.feedback('click-suggestion', {
+        rid: 'testRequestId',
         suggestion: 'testSuggestion',
       });
     });

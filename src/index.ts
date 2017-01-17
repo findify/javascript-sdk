@@ -23,32 +23,33 @@ import {
   RecommendationsResponse,
 } from './types';
 
+import {
+  validateInitParams,
+  validateAutocompleteParams,
+  validateSearchParams,
+  validateCollectionParams,
+  validateRecommendationsParams,
+  validateFeedbackParams,
+} from './validations';
+
 function init(config: Config) {
-  if (!config || typeof config.key === 'undefined') {
-    throw new Error('"key" param is required');
-  }
+  validateInitParams(config);
 
   return {
     autocomplete(request: AutocompleteRequest) {
-      if (!request || typeof request.q === 'undefined') {
-        throw new Error('"q" param is required');
-      }
+      validateAutocompleteParams(request);
 
       return requestApi('/autocomplete', request, config);
     },
 
     search(request: SearchRequest) {
-      if (!request || typeof request.q === 'undefined') {
-        throw new Error('"q" param is required');
-      }
+      validateSearchParams(request);
 
       return requestResults('/search', request, config);
     },
 
     collection(request: CollectionRequest) {
-      if (!request || typeof request.slot === 'undefined') {
-        throw new Error('"slot" param is required');
-      }
+      validateCollectionParams(request);
 
       const omittedRequest = omit(request, ['slot']);
 
@@ -61,13 +62,7 @@ function init(config: Config) {
       const slot = request ? (request as PredefinedRecommendationsRequest).slot : undefined;
       const itemId = request ? (request as ViewedOrBought).item_id : undefined;
 
-      if (type === 'predefined' && (!request || typeof slot === 'undefined')) {
-        throw new Error('"slot" param is required');
-      }
-
-      if ((type === 'viewed' || type === 'bought') && (!request || typeof itemId === 'undefined')) {
-        throw new Error('"item_id" param is required');
-      }
+      validateRecommendationsParams(type, request);
 
       if (type === 'predefined') {
         const omittedRequest = omit(request, ['slot']);
@@ -102,6 +97,8 @@ function init(config: Config) {
     },
 
     feedback(type: FeedbackType, request) {
+      validateFeedbackParams(type, request);
+
       if (type === 'click-suggestion') {
         requestApi('/feedback', {
           event: 'click-suggestion',
