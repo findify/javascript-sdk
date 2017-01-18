@@ -85,7 +85,7 @@ describe('requestApi', () => {
         makeRequestApi();
       });
 
-      it('should resolve server response body', (done) => {
+      it('should resolve server response body object', (done) => {
         const responseBody = {
           value: 'test response body value',
           value2: 'test response body value2',
@@ -101,6 +101,21 @@ describe('requestApi', () => {
         makeRequestApi()
           .then((response) => {
             expect(response).toEqual(responseBody);
+            done();
+          })
+          .catch(done);
+      });
+
+      it('should resolve "undefined" if server response is not an object', (done) => {
+        fauxJax.on('request', (req) => {
+          const { callback } = getQueryParams(req.requestURL);
+
+          req.respond(200, {}, `typeof ${callback} === 'function' && ${callback}('test')`);
+        });
+
+        makeRequestApi()
+          .then((response) => {
+            expect(response).toBe(undefined);
             done();
           })
           .catch(done);

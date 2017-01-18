@@ -54,8 +54,10 @@ function requestApi(endpoint: string, requestBody: RequestBody, config: Config) 
       }, (err: Error, response) => {
         if (err) {
           reject(err);
-        } else {
+        } else if (typeof response === 'object' && !(response instanceof Array)) {
           resolve(toPlainObject(response));
+        } else {
+          resolve(undefined);
         }
       });
     });
