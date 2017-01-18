@@ -9,6 +9,7 @@ const {
   validateCollectionParams,
   validateRecommendationsParams,
   validateFeedbackParams,
+  validateUserParams,
 }: any = validations;
 
 describe('validations', () => {
@@ -345,6 +346,25 @@ describe('validations', () => {
         ref: 'testRef',
         width: 1366,
       })).toThrow(/"height" param is required/);
+    });
+  });
+
+  describe('validateUserParams', () => {
+    it('should throw an Error if "user" prop is not provided', () => {
+      const regex = /`user` param should be provided either at request or at library config/;
+      expect(() => validateUserParams()).toThrow(regex);
+    });
+
+    it('should throw an Error if "user.uid" prop is not provided at "request"', () => {
+      expect(() => validateUserParams({
+        sid: 'testSessionId',
+      })).toThrow(/"user.uid" param is required/);
+    });
+
+    it('should throw an Error if "user.sid" prop is not provided at "request"', () => {
+      expect(() => validateUserParams({
+        uid: 'testUserId',
+      })).toThrow(/"user.sid" param is required/);
     });
   });
 });

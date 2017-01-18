@@ -5,6 +5,7 @@ import * as Promise from 'bluebird';
 import * as assign from 'lodash/assign';
 import * as toPlainObject from 'lodash/toPlainObject';
 
+import { validateUserParams } from '../validations';
 import { resolveUrl } from '../utils/resolveUrl';
 import { countBytesInString } from '../utils/countBytesInString';
 import { joinParams } from '../utils/joinParams';
@@ -69,19 +70,7 @@ function extendRequest(requestBody: RequestBody, config: Config): ExtendedReques
     t_client: (new Date()).getTime(),
   });
 
-  const { user } = extendedRequest;
-
-  if (typeof user === 'undefined') {
-    throw new Error('`user` param should be provided either at request or at library config');
-  }
-
-  if (typeof user.uid === 'undefined') {
-    throw new Error('"user.uid" param is required');
-  }
-
-  if (typeof user.sid === 'undefined') {
-    throw new Error('"user.sid" param is required');
-  }
+  validateUserParams(extendedRequest.user);
 
   return extendedRequest as any;
 }

@@ -3,6 +3,7 @@ import * as omit from 'lodash/omit';
 import { everyKey } from './utils/everyKey';
 import {
   Config,
+  User,
   RecommendationsType,
   FeedbackType,
   AutocompleteRequest,
@@ -192,6 +193,20 @@ function validateFeedbackParams(type: FeedbackType, request) {
   }
 }
 
+function validateUserParams(user: User) {
+  if (typeof user === 'undefined') {
+    throw new Error('`user` param should be provided either at request or at library config');
+  }
+
+  if (typeof user.uid === 'undefined') {
+    throw new Error('"user.uid" param is required');
+  }
+
+  if (typeof user.sid === 'undefined') {
+    throw new Error('"user.sid" param is required');
+  }
+}
+
 export {
   validateInitParams,
   validateAutocompleteParams,
@@ -200,4 +215,5 @@ export {
   validateCollectionParams,
   validateRecommendationsParams,
   validateFeedbackParams,
+  validateUserParams,
 }
