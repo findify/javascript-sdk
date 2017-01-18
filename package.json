@@ -1,5 +1,5 @@
 {
-  "name": "@findify/findify-sdk",
+  "name": "findify-sdk",
   "version": "1.2.5",
   "description": "Findify search api client",
   "main": "lib/index.js",
