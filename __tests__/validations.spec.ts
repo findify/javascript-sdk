@@ -16,6 +16,40 @@ describe('validations', () => {
       expect(() => validateInitParams()).toThrow(/"key" param is required/);
       expect(() => validateInitParams({})).toThrow(/"key" param is required/);
     });
+
+    it('should throw an Error if type of "key" is not a string', () => {
+      expect(() => validateInitParams({
+        key: true,
+      })).toThrow(/"key" param should be a string/);
+    });
+
+    it('should throw an Error if wrong "method" param was provided', () => {
+      expect(() => validateInitParams({
+        key: 'testKey',
+        method: 'wrongMethod',
+      })).toThrow(/"method" param should be either "post" or "jsonp"/);
+    });
+
+    it('should throw an Error if wrong "log" param was provided', () => {
+      expect(() => validateInitParams({
+        key: 'testKey',
+        log: 'string',
+      })).toThrow(/"log" param should be "boolean" type/);
+    });
+
+    it('should not throw an Error if correct params are provided', () => {
+      expect(() => validateInitParams({
+        key: 'testKey',
+        method: 'post',
+        log: true,
+      })).toNotThrow()
+
+      expect(() => validateInitParams({
+        key: 'testKey',
+        method: 'jsonp',
+        log: false,
+      })).toNotThrow()
+    });
   });
 
   describe('validateAutocompleteParams', () => {

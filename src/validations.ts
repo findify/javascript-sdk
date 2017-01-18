@@ -14,6 +14,18 @@ function validateInitParams(config: Config) {
   if (!has(config, 'key')) {
     throw new Error('"key" param is required');
   }
+
+  if (typeof config.key !== 'string') {
+    throw new Error('"key" param should be a string');
+  }
+
+  if (typeof config.method !== 'undefined' && (config.method !== 'post' && config.method !== 'jsonp')) {
+    throw new Error('"method" param should be either "post" or "jsonp"');
+  }
+
+  if (typeof config.log !== 'undefined' && typeof config.log !== 'boolean') {
+    throw new Error('"log" param should be "boolean" type');
+  }
 }
 
 function validateAutocompleteParams(request: AutocompleteRequest) {
