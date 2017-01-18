@@ -226,11 +226,11 @@ describe('requestApi', () => {
       })).toThrow(/jsonp method is not allowed in node environment/);
     });
 
-    it('should add "host" as "https://search-staging.findify.io"', () => {
+    it('should add "host" as "https://search-staging.findify.io/v3"', () => {
       const restoreEnv = r.__set__('env', require('../../src/env/staging'));
 
       expect(makeSettings({ key })).toContain({
-        host: 'https://search-staging.findify.io',
+        host: 'https://search-staging.findify.io/v3',
       });
 
       restoreEnv();

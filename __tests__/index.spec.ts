@@ -105,9 +105,9 @@ describe('FindifySDK', () => {
       }));
     });
 
-    it('should send request to /collection endpoint', (done) => {
+    it('should send request to /smart-collection endpoint', (done) => {
       fauxJax.on('request', (req) => {
-        expect(req.requestURL.indexOf('/collection') > -1).toBe(true);
+        expect(req.requestURL.indexOf('/smart-collection') > -1).toBe(true);
         done();
       });
 
@@ -120,7 +120,7 @@ describe('FindifySDK', () => {
 
     it('should send collection "slot" param in url', (done) => {
       fauxJax.on('request', (req) => {
-        expect(req.requestURL.indexOf('/collection/test_slot') > -1).toBe(true);
+        expect(req.requestURL.indexOf('/smart-collection/test_slot') > -1).toBe(true);
         done();
       });
 
