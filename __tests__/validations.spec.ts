@@ -44,13 +44,13 @@ describe('validations', () => {
         key: 'testKey',
         method: 'post',
         log: true,
-      })).toNotThrow()
+      })).toNotThrow();
 
       expect(() => validateInitParams({
         key: 'testKey',
         method: 'jsonp',
         log: false,
-      })).toNotThrow()
+      })).toNotThrow();
     });
   });
 
