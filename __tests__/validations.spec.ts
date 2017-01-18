@@ -4,6 +4,7 @@ import * as validations from '../src/validations';
 const {
   validateInitParams,
   validateAutocompleteParams,
+  validateResultsParams,
   validateSearchParams,
   validateCollectionParams,
   validateRecommendationsParams,
@@ -56,6 +57,44 @@ describe('validations', () => {
     it('should throw validation Error if "q" param is not provided', () => {
       expect(() => validateAutocompleteParams()).toThrow(/"q" param is required/);
       expect(() => validateAutocompleteParams({})).toThrow(/"q" param is required/);
+    });
+  });
+
+  describe('validateResultsParams', () => {
+    it('should throw validation Error if "filters.name" param is not provided', () => {
+      expect(() => validateResultsParams({
+        q: 'test',
+        filters: [{
+          type: 'testType',
+        } as any],
+      })).toThrow(/"filters.name" param is required/);
+    });
+
+    it('should throw validation Error if "filters.type" param is not provided', () => {
+      expect(() => validateResultsParams({
+        q: 'test',
+        filters: [{
+          name: 'testFilter',
+        } as any],
+      })).toThrow(/"filters.type" param is required/);
+    });
+
+    it('should throw validation Error if "sort.field" param is not provided', () => {
+      expect(() => validateResultsParams({
+        q: 'test',
+        sort: [{
+          order: 'testOrder',
+        } as any],
+      })).toThrow(/"sort.field" param is required/);
+    });
+
+    it('should throw validation Error if "sort.order" param is not provided', () => {
+      expect(() => validateResultsParams({
+        q: 'test',
+        sort: [{
+          field: 'testField',
+        } as any],
+      })).toThrow(/"sort.order" param is required/);
     });
   });
 

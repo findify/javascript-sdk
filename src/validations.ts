@@ -1,4 +1,6 @@
 import * as has from 'lodash/has';
+import * as omit from 'lodash/omit';
+import { everyKey } from './utils/everyKey';
 import {
   Config,
   RecommendationsType,
@@ -8,6 +10,8 @@ import {
   CollectionRequest,
   RecommendationsRequest,
   FeedbackRequest,
+  SearchRequestBody,
+  CollectionRequestBody,
 } from './types';
 
 function validateInitParams(config: Config) {
@@ -34,16 +38,40 @@ function validateAutocompleteParams(request: AutocompleteRequest) {
   }
 }
 
+function validateResultsParams(request: SearchRequestBody | CollectionRequestBody) {
+  const { filters, sort } = request;
+
+  if (filters && !everyKey(filters, 'name')) {
+    throw new Error('"filters.name" param is required');
+  }
+
+  if (filters && !everyKey(filters, 'type')) {
+    throw new Error('"filters.type" param is required');
+  }
+
+  if (sort && !everyKey(sort, 'field')) {
+    throw new Error('"sort.field" param is required');
+  }
+
+  if (sort && !everyKey(sort, 'order')) {
+    throw new Error('"sort.order" param is required');
+  }
+}
+
 function validateSearchParams(request: SearchRequest) {
   if (!has(request, 'q')) {
     throw new Error('"q" param is required');
   }
+
+  validateResultsParams(request);
 }
 
 function validateCollectionParams(request: CollectionRequest) {
   if (!has(request, 'slot')) {
     throw new Error('"slot" param is required');
   }
+
+  validateResultsParams(omit(request, ['slot']));
 }
 
 function validateRecommendationsParams(type: RecommendationsType, request: RecommendationsRequest) {
@@ -167,6 +195,7 @@ function validateFeedbackParams(type: FeedbackType, request) {
 export {
   validateInitParams,
   validateAutocompleteParams,
+  validateResultsParams,
   validateSearchParams,
   validateCollectionParams,
   validateRecommendationsParams,

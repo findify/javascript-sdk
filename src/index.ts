@@ -3,7 +3,6 @@ import * as assign from 'lodash/assign';
 import * as omit from 'lodash/omit';
 
 import { requestApi } from './modules/requestApi';
-import { requestResults } from './modules/requestResults';
 
 import {
   Config,
@@ -45,7 +44,7 @@ function init(config: Config) {
     search(request: SearchRequest) {
       validateSearchParams(request);
 
-      return requestResults('/search', request, config);
+      return requestApi('/search', request, config);
     },
 
     collection(request: CollectionRequest) {
@@ -53,7 +52,7 @@ function init(config: Config) {
 
       const omittedRequest = omit(request, ['slot']);
 
-      return requestResults(`/smart-collection/${request.slot}`, omittedRequest, config);
+      return requestApi(`/smart-collection/${request.slot}`, omittedRequest, config);
     },
 
     recommendations(type: RecommendationsType, request?: RecommendationsRequest) {
