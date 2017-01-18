@@ -53,7 +53,7 @@ function init(config: Config) {
 
       const omittedRequest = omit(request, ['slot']);
 
-      return requestResults(`/collection/${request.slot}`, omittedRequest, config);
+      return requestResults(`/smart-collection/${request.slot}`, omittedRequest, config);
     },
 
     recommendations(type: RecommendationsType, request?: RecommendationsRequest) {
