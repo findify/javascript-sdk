@@ -76,6 +76,18 @@ function validateCollectionParams(request: CollectionRequest) {
 }
 
 function validateRecommendationsParams(type: RecommendationsType, request: RecommendationsRequest) {
+  if ([
+    'predefined',
+    'newest',
+    'trending',
+    'featured',
+    'latest',
+    'viewed',
+    'bought',
+  ].indexOf(type) === -1) {
+    throw new Error('Recommendations "type" not found');
+  }
+
   if (type === 'predefined' && !has(request, 'slot')) {
     throw new Error('"slot" param is required');
   }

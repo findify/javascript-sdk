@@ -114,10 +114,24 @@ describe('validations', () => {
   });
 
   describe('validateRecommendationsParams', () => {
+    describe('generic', () => {
+      it('should throw an Error if unrecognized recommendations type was provided', () => {
+        const regex = /Recommendations "type" not found/;
+        expect(() => validateRecommendationsParams('unrecognized')).toThrow(regex);
+        expect(() => validateRecommendationsParams('unrecognized', {})).toThrow(regex);
+      });
+    });
+
     describe('predefined', () => {
       it('should throw validation Error if "slot" param is not provided', () => {
         expect(() => validateRecommendationsParams('predefined')).toThrow(/"slot" param is required/);
         expect(() => validateRecommendationsParams('predefined', {})).toThrow(/"slot" param is required/);
+      });
+
+      it('should not throw if all required params are provided', () => {
+        expect(() => validateRecommendationsParams('predefined', {
+          slot: 'test',
+        })).toNotThrow();
       });
     });
 
@@ -126,12 +140,48 @@ describe('validations', () => {
         expect(() => validateRecommendationsParams('viewed')).toThrow(/"item_id" param is required/);
         expect(() => validateRecommendationsParams('viewed', {})).toThrow(/"item_id" param is required/);
       });
+
+      it('should not throw if all required params are provided', () => {
+        expect(() => validateRecommendationsParams('viewed', {
+          item_id: 'test',
+        })).toNotThrow();
+      });
     });
 
     describe('bought', () => {
       it('should throw validation Error if "item_id" param is not provided', () => {
         expect(() => validateRecommendationsParams('bought')).toThrow(/"item_id" param is required/);
         expect(() => validateRecommendationsParams('bought', {})).toThrow(/"item_id" param is required/);
+      });
+
+      it('should not throw if all required params are provided', () => {
+        expect(() => validateRecommendationsParams('bought', {
+          item_id: 'test',
+        })).toNotThrow();
+      });
+    });
+
+    describe('featured', () => {
+      it('should not throw', () => {
+        expect(() => validateRecommendationsParams('featured')).toNotThrow();
+      });
+    });
+
+    describe('newest', () => {
+      it('should not throw', () => {
+        expect(() => validateRecommendationsParams('newest')).toNotThrow();
+      });
+    });
+
+    describe('trending', () => {
+      it('should not throw', () => {
+        expect(() => validateRecommendationsParams('trending')).toNotThrow();
+      });
+    });
+
+    describe('latest', () => {
+      it('should not throw', () => {
+        expect(() => validateRecommendationsParams('latest')).toNotThrow();
       });
     });
   });
