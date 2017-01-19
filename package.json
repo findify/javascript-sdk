@@ -5,6 +5,12 @@
   "main": "lib/index.js",
   "author": "Findify <yourfriends@findify.io>",
   "license": "MIT",
+  "tags": [
+    "client",
+    "search",
+    "findify",
+    "sdk"
+  ],
   "files": [
     "dist",
     "lib",
