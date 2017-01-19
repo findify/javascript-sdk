@@ -47,3 +47,6 @@ client.autocomplete({
 
 # Documentation
 - [API Reference](https://findify.readme.io/reference#initialization)
+
+# License
+MIT
