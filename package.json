@@ -28,7 +28,7 @@
     "prepublish": "npm run build",
     "postpublish": "npm run clean",
     "preversion": "npm run check && git checkout master && git merge develop",
-    "postversion": "git push && git push --tags && git checkout develop && git merge master && git push && npm publish"
+    "postversion": "git push && git push --tags && git checkout develop && git merge master && git push"
   },
   "dependencies": {
     "@types/axios": "^0.9.34",
