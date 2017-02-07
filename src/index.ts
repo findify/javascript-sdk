@@ -91,7 +91,7 @@ function init(config: Config) {
       }
 
       if (type === 'latest') {
-        return requestApi('/recommend/items/latest', request, config);
+        return requestApi('/recommend/items/viewed/latest', request, config);
       }
     },
 
