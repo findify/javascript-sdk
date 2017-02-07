@@ -462,7 +462,7 @@ describe('FindifySDK', () => {
     describe('latest', () => {
       it('should send request to "/recommend/items/viewed/latest" endpoint', (done) => {
         fauxJax.on('request', (req) => {
-          expect(req.requestURL.indexOf('/recommend/items/latest') > -1).toBe(true);
+          expect(req.requestURL.indexOf('/recommend/items/viewed/latest') > -1).toBe(true);
           done();
         });
 
