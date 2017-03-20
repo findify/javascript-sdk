@@ -50,7 +50,7 @@ function requestApi(endpoint: string, requestBody: RequestBody, config: Config) 
     return new Promise((resolve, reject) => {
       jsonp(joinParams(url, queryStringParams), {
         prefix: settings.jsonpCallbackPrefix,
-        timeout: 1000,
+        timeout: 5000,
       }, (err: Error, response) => {
         if (err) {
           reject(err);
