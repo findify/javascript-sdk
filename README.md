@@ -9,11 +9,11 @@ yarn add findify-sdk
 ```
 Alternatively, you can use UMD builds, by requiring them to the page using `<script>` tag:
 ```
-https://s3.amazonaws.com/findify-assets/js-sdk/findify-sdk.1.3.6.min.js
+https://findify-assets-2bveeb6u8ag.netdna-ssl.com/js-sdk/findify-sdk.1.3.6.min.js
 ```
 or using unminified version:
 ```
-https://s3.amazonaws.com/findify-assets/js-sdk/findify-sdk.1.3.6.js
+https://findify-assets-2bveeb6u8ag.netdna-ssl.com/js-sdk/findify-sdk.1.3.6.js
 ```
 
 ## Usage example
