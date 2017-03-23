@@ -184,6 +184,19 @@ describe('validations', () => {
         expect(() => validateRecommendationsParams('latest')).toNotThrow();
       });
     });
+
+    describe('frequentlyPurchased', () => {
+      it('should not throw', () => {
+        expect(() => validateRecommendationsParams('frequentlyPurchased', {
+          item_ids: [1, 2, 3, 4],
+        })).toNotThrow();
+      });
+
+      it('should throw if "item_ids" param is not provided', () => {
+        expect(() => validateRecommendationsParams('frequentlyPurchased')).toThrow(/"item_ids" param is required/);
+        expect(() => validateRecommendationsParams('frequentlyPurchased', {})).toThrow(/"item_ids" param is required/);
+      });
+    });
   });
 
   describe('validateFeedbackParams', () => {

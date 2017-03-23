@@ -85,7 +85,8 @@ type RecommendationsType = (
   'featured' |
   'latest' |
   'viewed' |
-  'bought'
+  'bought' |
+  'frequentlyPurchased'
 );
 
 type FeedbackType = (
@@ -264,13 +265,18 @@ type BoughtRecommendationsRequest = CommonRecommendationsRequestBody & {
   item_id: string | number,
 };
 
+type FrequentlyPurchasedRecommendationsRequest = CommonRecommendationsRequestBody & {
+  item_id: string | number,
+};
+
 type RecommendationsRequest = (
   PredefinedRecommendationsRequest |
   NewestRecommendationsRequest |
   TrendingRecommendationsRequest |
   LatestRecommendationsRequest |
   ViewedRecommendationsRequest |
-  BoughtRecommendationsRequest
+  BoughtRecommendationsRequest |
+  FrequentlyPurchasedRecommendationsRequest
 );
 
 type AutocompleteResponse = {
@@ -328,6 +334,7 @@ export {
   PredefinedRecommendationsRequest,
   ViewedRecommendationsRequest,
   BoughtRecommendationsRequest,
+  FrequentlyPurchasedRecommendationsRequest,
   FeedbackRequest,
   RequestBody,
   SearchRequestBody,

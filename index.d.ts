@@ -35,7 +35,8 @@ declare module "findify-sdk" {
     'featured' |
     'latest' |
     'viewed' |
-    'bought'
+    'bought' |
+    'frequentlyPurchased'
   );
   type FeedbackType = (
     'click-suggestion' |
@@ -95,13 +96,19 @@ declare module "findify-sdk" {
     offset?: number,
     limit?: number,
   };
+  type FrequentlyPurchasedRecommendationsRequest = {
+    item_ids: (string | number)[],
+    offset?: number,
+    limit?: number,
+  };
   type RecommendationsRequest = (
     PredefinedRecommendationsRequest |
     NewestRecommendationsRequest |
     TrendingRecommendationsRequest |
     LatestRecommendationsRequest |
     ViewedRecommendationsRequest |
-    BoughtRecommendationsRequest
+    BoughtRecommendationsRequest |
+    FrequentlyPurchasedRecommendationsRequest
   );
   type ClickSuggestionFeedbackRequest = {
     rid: string,

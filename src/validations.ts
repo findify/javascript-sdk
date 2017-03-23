@@ -84,6 +84,7 @@ function validateRecommendationsParams(type: RecommendationsType, request: Recom
     'latest',
     'viewed',
     'bought',
+    'frequentlyPurchased',
   ].indexOf(type) === -1) {
     throw new Error('Recommendations "type" not found');
   }
@@ -94,6 +95,10 @@ function validateRecommendationsParams(type: RecommendationsType, request: Recom
 
   if ((type === 'viewed' || type === 'bought') && !has(request, 'item_id')) {
     throw new Error('"item_id" param is required');
+  }
+
+  if (type === 'frequentlyPurchased' && !has(request, 'item_ids')) {
+    throw new Error('"item_ids" param is required');
   }
 }
 
