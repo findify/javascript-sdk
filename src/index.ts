@@ -15,6 +15,7 @@ import {
   PredefinedRecommendationsRequest,
   ViewedRecommendationsRequest,
   BoughtRecommendationsRequest,
+  FrequentlyPurchasedRecommendationsRequest,
   FeedbackRequest,
   AutocompleteResponse,
   SearchResponse,
@@ -76,6 +77,13 @@ function init(config: Config) {
       if (type === 'bought') {
         const omittedRequest = omit(request, ['item_id']);
         return requestApi(`/recommend/items/${itemId}/viewed/bought`, omittedRequest, config);
+      }
+
+      if (type === 'frequentlyPurchased') {
+        const omittedRequest = omit(request, ['item_ids']);
+        const itemIds = (request as FrequentlyPurchasedRecommendationsRequest).item_ids;
+        const itemIdsStr = itemIds.join(',');
+        return requestApi(`/recommend/items/${itemIdsStr}/bought/bought`, omittedRequest, config);
       }
 
       if (type === 'featured') {

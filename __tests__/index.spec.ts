@@ -557,5 +557,40 @@ describe('FindifySDK', () => {
         sdk.recommendations('bought', request);
       });
     });
+
+    describe('frequentlyPurchased', () => {
+      it('should send request to "/recommend/items/{item_ids}/bought/bought" endpoint', (done) => {
+        fauxJax.on('request', (req) => {
+          expect(req.requestURL.indexOf('/recommend/items/1,2,3,4/bought/bought') > -1).toBe(true);
+          done();
+        });
+
+        const sdk = initSdk();
+
+        sdk.recommendations('frequentlyPurchased', {
+          item_ids: [1, 2, 3, 4],
+        });
+      });
+
+      it('should send provided request data as request body', (done) => {
+        const itemIds = [1, 2];
+        const request = {
+          item_ids: itemIds,
+          offest: 5,
+          limit: 10,
+        };
+
+        fauxJax.on('request', (req) => {
+          expect(JSON.parse(req.requestBody)).toContain(omit(request, ['item_ids'])).toNotContain({
+            item_ids: itemIds,
+          });
+          done();
+        });
+
+        const sdk = initSdk();
+
+        sdk.recommendations('frequentlyPurchased', request);
+      });
+    });
   });
 });

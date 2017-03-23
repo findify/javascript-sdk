@@ -266,7 +266,7 @@ type BoughtRecommendationsRequest = CommonRecommendationsRequestBody & {
 };
 
 type FrequentlyPurchasedRecommendationsRequest = CommonRecommendationsRequestBody & {
-  item_id: string | number,
+  item_ids: (string | number)[],
 };
 
 type RecommendationsRequest = (
